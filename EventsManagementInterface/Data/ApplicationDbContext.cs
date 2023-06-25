@@ -19,4 +19,4 @@ namespace EventsManagementInterface.Data
             optionsBuilder.UseSqlServer();
         }
     }
-}
+} 
