@@ -1,0 +1,87 @@
+﻿@page "/Registration"
+@using EventsManagementInterface.Data.Models
+
+<PageTitle>Attendance Registration</PageTitle>
+
+<form @onsubmit="SubmitAttendanceRegistration">
+    <div class="card-custom p-5">
+        <div class="card-body-custom">
+            <h3 class="mb-2">Hello, please register your attendance.</h3>
+            <div class="row mb-3 mt-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationFirstName">First name</label>
+                    <input type="text" class="form-control" id="registrationFirstName" @bind-value="attendanceRegistration.FirstName" style="text-transform:capitalize !important;">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationMiddleName">Middle name(s)</label>
+                    <input type="text" class="form-control" id="registrationMiddleName" @bind-value="attendanceRegistration.MiddleName" style="text-transform:capitalize !important;">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationLastName">Last name</label>
+                    <input type="text" class="form-control" id="registrationLastName" @bind-value="attendanceRegistration.LastName" style="text-transform:capitalize !important;">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationDateOfBirth">Date of birth</label>
+                    <input type="date" class="form-control" id="registrationDateOfBirth" @bind-value="attendanceRegistration.DateOfBirth">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationEmailAddress">Email address</label>
+                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="attendanceRegistration.EmailAddress" style="text-transform:capitalize !important;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="registrationNumberOfGuests">Number of guests</label>
+                    <select class="form-control" id="registrationNumberOfGuests" @bind="attendanceRegistration.NumberOfGuests">
+                        @for(int i = 1; i < 11; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+
+          @*  <div class="row">
+                <div class="form-group col-lg-6 col-sm-12 mt-3">
+
+                    @if (savingRequest)
+                    {
+                        <button class="btn btn-primary" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span class="sr-only">Saving...</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                        <input type="button" class="btn btn-secondary" value="Cancel" @onclick="ShowHideContentRequestForm" />
+                    }
+                </div>
+            </div>*@
+        </div>
+    </div>
+</form>
+
+
+@code {
+    private AttendanceRegistration attendanceRegistration;
+
+    protected override async Task OnInitializedAsync()
+    {
+        attendanceRegistration = new AttendanceRegistration();
+    }
+
+    public async Task SubmitAttendanceRegistration()
+    {
+        
+    }
+}

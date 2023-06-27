@@ -1,11 +1,15 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Work Sans', sans-serif;
 }
 
 h1:focus {
     outline: none;
+}
+
+.btn {
+    border-radius: 25px;
 }
 
 a, .btn-link {
@@ -14,12 +18,17 @@ a, .btn-link {
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: rebeccapurple;
+    border-color: transparent;
 }
 
+    .btn-primary:hover {
+        background-color: purple;
+        border-color: transparent;
+    }
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -65,4 +74,83 @@ a, .btn-link {
 
     .blazor-error-boundary::after {
         content: "An error has occurred."
+    }
+
+.card-custom {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #f8f9fa;
+    background-clip: border-box;
+    border: 0px solid rgba(0,0,0,.125);
+    border-radius: 25px;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.card-body-custom {
+    flex: 1 1 auto;
+    padding: 1rem 1rem;
+    background-color: transparent;
+}
+
+    .card-body-custom .form-group {
+        margin-bottom: 15px
+    }
+
+select {
+    border: none !important;
+    background-color: transparent !important;
+    border-radius: 0px !important;
+    border-bottom: 1px solid purple !important;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+    select:focus {
+        box-shadow: none !important;
+        border-radius: 0px !important;
+    }
+
+input[type=text] {
+    background-color: transparent !important;
+    border-bottom: 1px solid grey;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0px !important;
+    opacity: 90%;
+    text-transform: capitalize;
+}
+
+    input[type=text]:focus {
+        box-shadow: none !important;
+        border-radius: 0px !important;
+    }
+
+.action-buttons {
+    cursor: pointer;
+    color: rebeccapurple;
+    margin-right: 25px;
+}
+
+    .action-buttons:hover {
+        color: purple;
+    }
+
+.column-sorted {
+    cursor: pointer;
+}
+
+.data-card {
+    /*background-color: #f1f1f1 !important;*/
+}
+
+    .data-card p {
+        margin-bottom: 0px !important;
     }

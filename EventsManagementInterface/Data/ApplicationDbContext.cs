@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using EventsManagementInterface.Data.Models;
 
 namespace EventsManagementInterface.Data
 {
@@ -18,5 +19,7 @@ namespace EventsManagementInterface.Data
         {
             optionsBuilder.UseSqlServer();
         }
+
+        public virtual DbSet<AttendanceRegistration> Registrations { get; set; }
     }
 } 
