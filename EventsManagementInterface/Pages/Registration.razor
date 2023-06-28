@@ -1,5 +1,7 @@
 ﻿@page "/Registration"
 @using EventsManagementInterface.Data.Models
+@using EventsManagementInterface.Data.Services
+@inject RegistrationService registrationService
 
 <PageTitle>Attendance Registration</PageTitle>
 
@@ -10,37 +12,37 @@
             <div class="row mb-3 mt-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationFirstName">First name</label>
-                    <input type="text" class="form-control" id="registrationFirstName" @bind-value="attendanceRegistration.FirstName" style="text-transform:capitalize !important;">
+                    <input type="text" class="form-control" id="registrationFirstName" @bind-value="registration.FirstName" style="text-transform:capitalize !important;">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationMiddleName">Middle name(s)</label>
-                    <input type="text" class="form-control" id="registrationMiddleName" @bind-value="attendanceRegistration.MiddleName" style="text-transform:capitalize !important;">
+                    <input type="text" class="form-control" id="registrationMiddleName" @bind-value="registration.MiddleName" style="text-transform:capitalize !important;">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationLastName">Last name</label>
-                    <input type="text" class="form-control" id="registrationLastName" @bind-value="attendanceRegistration.LastName" style="text-transform:capitalize !important;">
+                    <input type="text" class="form-control" id="registrationLastName" @bind-value="registration.LastName" style="text-transform:capitalize !important;">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationDateOfBirth">Date of birth</label>
-                    <input type="date" class="form-control" id="registrationDateOfBirth" @bind-value="attendanceRegistration.DateOfBirth">
+                    <input type="date" class="form-control" id="registrationDateOfBirth" @bind-value="registration.DateOfBirth">
                 </div>
             </div>
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationEmailAddress">Email address</label>
-                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="attendanceRegistration.EmailAddress" style="text-transform:capitalize !important;">
+                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="registration.EmailAddress" style="text-transform:capitalize !important;">
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationNumberOfGuests">Number of guests</label>
-                    <select class="form-control" id="registrationNumberOfGuests" @bind="attendanceRegistration.NumberOfGuests">
+                    <select class="form-control" id="registrationNumberOfGuests" @bind="registration.NumberOfGuests">
                         @for(int i = 1; i < 11; i++)
                         {
                             <option value="@i">@i</option>
@@ -49,39 +51,22 @@
                 </div>
             </div>
 
-
-          @*  <div class="row">
-                <div class="form-group col-lg-6 col-sm-12 mt-3">
-
-                    @if (savingRequest)
-                    {
-                        <button class="btn btn-primary" type="button" disabled>
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            <span class="sr-only">Saving...</span>
-                        </button>
-                    }
-                    else
-                    {
-                        <input type="submit" class="btn btn-primary" value="Submit" />
-                        <input type="button" class="btn btn-secondary" value="Cancel" @onclick="ShowHideContentRequestForm" />
-                    }
-                </div>
-            </div>*@
+            <input type="submit" class="btn btn-primary" value="Submit" />
         </div>
     </div>
 </form>
 
 
 @code {
-    private AttendanceRegistration attendanceRegistration;
+    private EventsManagementInterface.Data.Models.Registration registration;
 
     protected override async Task OnInitializedAsync()
     {
-        attendanceRegistration = new AttendanceRegistration();
+        registration = new EventsManagementInterface.Data.Models.Registration();
     }
 
     public async Task SubmitAttendanceRegistration()
     {
-        
+        await registrationService.RegisterAttendee(registration);
     }
 }

@@ -20,6 +20,7 @@ namespace EventsManagementInterface.Data
             optionsBuilder.UseSqlServer();
         }
 
-        public virtual DbSet<AttendanceRegistration> Registrations { get; set; }
+        public virtual DbSet<Attendee> Attendee { get; set; }
+        public virtual DbSet<Log> Log { get; set; }
     }
 } 

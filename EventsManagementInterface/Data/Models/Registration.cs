@@ -1,6 +1,6 @@
 ﻿namespace EventsManagementInterface.Data.Models
 {
-    public class AttendanceRegistration : BaseModel
+    public class Registration : BaseModel
     {
         public string FirstName { get; set; }
         public string? MiddleName { get; set; }
