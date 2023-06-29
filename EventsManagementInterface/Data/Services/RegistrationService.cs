@@ -1,10 +1,5 @@
-﻿using EventsManagementInterface.Data;
-using Microsoft.EntityFrameworkCore;
-using EventsManagementInterface.Data.Migrations;
-using EventsManagementInterface.Data.Models;
+﻿using EventsManagementInterface.Data.Models;
 using System.Globalization;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 
 namespace EventsManagementInterface.Data.Services
 {
@@ -20,13 +15,15 @@ namespace EventsManagementInterface.Data.Services
             this.logService = logService;
         }
 
-        public async Task<bool> RegisterAttendee(Registration registration)
+        public RegistrationModal RegisterAttendee(Models.Registration registration)
         {
             try
             {
-                if(!registration.EmailAddress.ToLower().Contains("@coloplast.com"))
+                RegistrationModal registrationModal = ValidateRegistration(registration);
+
+                if (!registrationModal.Success) 
                 {
-                    return false;
+                    return registrationModal;
                 }
 
                 Random random = new Random();
@@ -50,23 +47,89 @@ namespace EventsManagementInterface.Data.Services
                 while (guestIdentificationNumberExists)
                 {
                     newGuestIdentificationNumber = random.Next(1000, 9999);
-                    guestIdentificationNumberExists = DoesGuestIdentifdicationNumberExist(newGuestIdentificationNumber);
+                    guestIdentificationNumberExists = IsGuestIdentifdicationNumberInUse(newGuestIdentificationNumber);
                 }
                 
                 attendee.GuestIdentificationNumber = newGuestIdentificationNumber;
+                registrationModal.GuestIdentificationNumber = newGuestIdentificationNumber;
 
                 database.Add(attendee);
                 database.SaveChanges();
 
-                return true;
+                return registrationModal;
             }
             catch (Exception ex)
             {
-                return false;
+                System.Console.WriteLine(ex.Message);
+                return null;
             }
         }
 
-        public bool DoesGuestIdentifdicationNumberExist(int newGuestIdentificationNumber)
+        public RegistrationModal ValidateRegistration(Models.Registration registration)
+        {
+            RegistrationModal registrationModal = new RegistrationModal();
+            registrationModal.Errors = new List<string>();
+            registrationModal.Success = true;
+
+            if (registration.EmailAddress == null || registration.EmailAddress == String.Empty)
+            {
+                registrationModal.Success = false;
+                registrationModal.Errors.Add("A Coloplast email address must be provided.");
+            }
+            else
+            {
+                if (!registration.EmailAddress.ToLower().Contains("@coloplast.com"))
+                {
+                    registrationModal.Success = false;
+                    registrationModal.Errors.Add("A Coloplast email address must be provided.");
+                }
+            }            
+
+            if (registration.FirstName == null || registration.FirstName == String.Empty)
+            {
+                registrationModal.Success = false;
+                registrationModal.Errors.Add("A first name must be provided.");
+            }
+
+            if (registration.LastName == null || registration.LastName == String.Empty)
+            {
+                registrationModal.Success = false;
+                registrationModal.Errors.Add("A last name must be provided.");
+            }    
+            
+            if (registration.NumberOfGuests == 0)
+            {
+                registrationModal.Success = false;
+                registrationModal.Errors.Add("Number of guests must be provided.");
+            }
+
+            //if (registration.DateOfBirth == DateTime.Now.AddYears(-35))
+            //{
+            //    registrationModal.Success = false;
+            //    registrationModal.Errors.Add("Please provide a date of birth.");
+            //}
+
+            if (IsEmailAddressInUse(registration.EmailAddress))
+            {
+                registrationModal.Success = false; 
+                registrationModal.Errors.Add("This email address has already been used.");
+            }
+
+            if (registrationModal.Success)
+            {
+                registrationModal.Title = "Your registration has been successful.";
+                registrationModal.Message = "An email has been sent to you, with your unique Guest Identification Number (GIN). Your GIN is also in bold below.";
+            }
+            else
+            {
+                registrationModal.Title = "Your registration has not been successful.";
+                registrationModal.Message = "Please see the following errors:";
+            }
+
+            return registrationModal;
+        }
+
+        public bool IsGuestIdentifdicationNumberInUse(int newGuestIdentificationNumber)
         {
             List<Attendee> attendees = database.Attendee.ToList();
             List<int> guestIdentificationNumbers = new List<int>();
@@ -79,6 +142,26 @@ namespace EventsManagementInterface.Data.Services
             foreach (int guestIdentificationNumber in guestIdentificationNumbers)
             {
                 if (guestIdentificationNumber == newGuestIdentificationNumber)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsEmailAddressInUse(string newEmailAddress)
+        {
+            List<Attendee> attendees = database.Attendee.ToList();
+            List<string> emailAddresses = new List<string>();
+
+            foreach (Attendee a in attendees)
+            {
+                emailAddresses.Add(a.EmailAddress);
+            }
+
+            foreach (string emailAddress in emailAddresses)
+            {
+                if (emailAddress == newEmailAddress)
                 {
                     return true;
                 }

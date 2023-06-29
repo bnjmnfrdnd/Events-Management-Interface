@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blazorise.Bootstrap" Version="1.2.4" />
+    <PackageReference Include="Blazorise.Charts" Version="1.2.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.4" />
     <PackageReference Include="bootstrap" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.5" />

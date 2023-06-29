@@ -21,6 +21,7 @@
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
+    color: black;
 }
 
     .nav-item:first-of-type {
@@ -42,7 +43,7 @@
 
 .nav-item ::deep a.active {
     background-color: rgba(255,255,255,0.25);
-    color: white;
+    color: black;
 }
 
 .nav-item ::deep a:hover {

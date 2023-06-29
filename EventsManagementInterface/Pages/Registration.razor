@@ -55,22 +55,33 @@
         </div>
     </div>
 </form>
-
 <Modal @ref="registrationOutcome">
-    <ModalContent Centered>
+    <ModalContent Size="ModalSize.Large">
         <ModalHeader>
             <ModalTitle>@registrationModal.Title</ModalTitle>
-            <CloseButton />
         </ModalHeader>
         <ModalBody>
             <Field>
-                <FieldLabel>@registrationModal.Message</FieldLabel>
-                
+                <FieldLabel Style="font-weight:100">@registrationModal.Message</FieldLabel>                
             </Field>
-            <Field>
-                <FieldLabel>Surname</FieldLabel>
-                <TextEdit Placeholder="Enter surname..." />
-            </Field>
+            <Div Class="mb-2"></Div>
+            @if (registrationModal.Success)
+            {
+                <Field>
+                    <FieldLabel><b>@registrationModal.GuestIdentificationNumber</b></FieldLabel>
+                </Field>
+            }
+            else
+            {
+                <Field>
+                    <UnorderedList>
+                        @foreach (string error in registrationModal.Errors)
+                        {
+                            <UnorderedListItem>@error</UnorderedListItem>
+                        }
+                    </UnorderedList>
+                </Field>
+            }
         </ModalBody>
         <ModalFooter>
             <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
@@ -80,7 +91,7 @@
 
 
 @code {
-    private EventsManagementInterface.Data.Models.Registration registration;
+    private Data.Models.Registration registration;
     private Modal registrationOutcome;
     private RegistrationModal registrationModal;
 
@@ -96,15 +107,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        registration = new EventsManagementInterface.Data.Models.Registration();
+        registration = new Data.Models.Registration();
+        registration.DateOfBirth = DateTime.Now.AddYears(-35);
+        registrationModal = new RegistrationModal();
+        registrationModal.Errors = new List<string>();
     }
 
     public async Task SubmitAttendanceRegistration()
     {
-        if (await registrationService.RegisterAttendee(registration))
-        {
-            ShowModal();
-        }
+        registrationModal = registrationService.RegisterAttendee(registration);
+        ShowModal();
 
+        if(registrationModal.Success)
+        {
+            registration = new Data.Models.Registration();
+        }
     }
 }

@@ -1,9 +1,61 @@
 ﻿@page "/"
+@using EventsManagementInterface.Data.Models
+@inject EventsManagementInterface.Data.Services.AdministrationService administrationService
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
+    <div class="card-body-custom">
+        <BarChart @ref="attendanceChart" Type="ChartType.Bar" TItem="double" />
+    </div>
+</div>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+    string[] attendanceLabels = { "Attending", "Invited" };
+    BarChart<double> attendanceChart;
+    private List<Attendee> attendees;
+
+    List<string> chartBackgroundColors = new List<string>
+    {
+        ChartColor.FromRgba(97,0,109, 0.5f),
+        ChartColor.FromRgba(192,0,255, 0.5f),
+        ChartColor.FromRgba(109,0,171, 0.5f),
+    };
+
+    List<string> chartBorderColors = new List<string>
+    {
+        ChartColor.FromRgba(0,0,0, 1f),
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            attendees = await administrationService.GetAttendees();
+            await attendanceChart.Clear();
+            await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
+        }
+    }
+
+    private BarChartDataset<double> GetAttendeeChartDataset()
+    {        
+        return new()
+            {
+                Label = "Attendees",
+                Data = AttendeeDataSet(),
+                BackgroundColor = chartBackgroundColors,
+                BorderColor = chartBorderColors,
+                BorderWidth = 3
+            };
+    }
+
+    List<double> AttendeeDataSet()
+    {
+        return new List<double>
+        {
+            attendees.Count(),
+            250
+        };
+    }
+}
