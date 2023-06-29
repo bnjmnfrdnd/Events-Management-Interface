@@ -22,22 +22,67 @@ namespace EventsManagementInterface.Data.Services
 
         public async Task<bool> RegisterAttendee(Registration registration)
         {
-            Attendee attendee = new Attendee
+            try
             {
-                FirstName = registration.FirstName,
-                MiddleName = registration.MiddleName,
-                LastName = registration.LastName,
-                DateOfBirth = registration.DateOfBirth,
-                EmailAddress = registration.EmailAddress,
-                NumberOfGuests = registration.NumberOfGuests,
-                CreatedDateTime = DateTime.Now,
-                DrinkTokenAllowance = registration.NumberOfGuests * 2,
-                FoodTokenAllowance = registration.NumberOfGuests * 2,
-                Archived = false,
-            };
+                if(!registration.EmailAddress.ToLower().Contains("@coloplast.com"))
+                {
+                    return false;
+                }
 
-            //logService.CreateLog();
+                Random random = new Random();
+                int newGuestIdentificationNumber = 0;
+                bool guestIdentificationNumberExists = true;
 
+                Attendee attendee = new Attendee
+                {
+                    FirstName = registration.FirstName,
+                    MiddleName = registration.MiddleName,
+                    LastName = registration.LastName,
+                    DateOfBirth = registration.DateOfBirth,
+                    EmailAddress = registration.EmailAddress,
+                    NumberOfGuests = registration.NumberOfGuests,
+                    CreatedDateTime = DateTime.Now,
+                    DrinkTokenAllowance = registration.NumberOfGuests * 2,
+                    FoodTokenAllowance = registration.NumberOfGuests * 2,
+                    Archived = false,
+                };
+                
+                while (guestIdentificationNumberExists)
+                {
+                    newGuestIdentificationNumber = random.Next(1000, 9999);
+                    guestIdentificationNumberExists = DoesGuestIdentifdicationNumberExist(newGuestIdentificationNumber);
+                }
+                
+                attendee.GuestIdentificationNumber = newGuestIdentificationNumber;
+
+                database.Add(attendee);
+                database.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public bool DoesGuestIdentifdicationNumberExist(int newGuestIdentificationNumber)
+        {
+            List<Attendee> attendees = database.Attendee.ToList();
+            List<int> guestIdentificationNumbers = new List<int>();
+
+            foreach (Attendee a in attendees)
+            {
+                guestIdentificationNumbers.Add(a.GuestIdentificationNumber);
+            }
+
+            foreach (int guestIdentificationNumber in guestIdentificationNumbers)
+            {
+                if (guestIdentificationNumber == newGuestIdentificationNumber)
+                {
+                    return true;
+                }
+            }
             return false;
         }
     }

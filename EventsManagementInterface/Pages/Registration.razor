@@ -36,7 +36,7 @@
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="registrationEmailAddress">Email address</label>
-                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="registration.EmailAddress" style="text-transform:capitalize !important;">
+                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="registration.EmailAddress">
                 </div>
             </div>
             <div class="row">
@@ -56,9 +56,43 @@
     </div>
 </form>
 
+<Modal @ref="registrationOutcome">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>@registrationModal.Title</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel>@registrationModal.Message</FieldLabel>
+                
+            </Field>
+            <Field>
+                <FieldLabel>Surname</FieldLabel>
+                <TextEdit Placeholder="Enter surname..." />
+            </Field>
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
 
 @code {
     private EventsManagementInterface.Data.Models.Registration registration;
+    private Modal registrationOutcome;
+    private RegistrationModal registrationModal;
+
+    private Task ShowModal()
+    {
+        return registrationOutcome.Show();
+    }
+
+    private Task HideModal()
+    {
+        return registrationOutcome.Hide();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +101,10 @@
 
     public async Task SubmitAttendanceRegistration()
     {
-        await registrationService.RegisterAttendee(registration);
+        if (await registrationService.RegisterAttendee(registration))
+        {
+            ShowModal();
+        }
+
     }
 }

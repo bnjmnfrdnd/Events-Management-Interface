@@ -117,7 +117,7 @@ select {
         border-radius: 0px !important;
     }
 
-input[type=text] {
+input[type=text], input[type=date] {
     background-color: transparent !important;
     border-bottom: 1px solid grey;
     border-top: none;
@@ -125,7 +125,6 @@ input[type=text] {
     border-right: none;
     border-radius: 0px !important;
     opacity: 90%;
-    text-transform: capitalize;
 }
 
     input[type=text]:focus {
