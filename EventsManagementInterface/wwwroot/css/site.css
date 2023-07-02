@@ -153,3 +153,9 @@ input[type=text], input[type=date] {
     .data-card p {
         margin-bottom: 0px !important;
     }
+
+.vendor-input-button {
+    background-color: red;
+    width: 8vh;
+    height: 8vh;
+}

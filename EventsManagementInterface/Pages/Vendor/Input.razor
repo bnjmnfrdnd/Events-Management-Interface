@@ -1,0 +1,119 @@
+﻿@page "/Vendor/Input"
+@using EventsManagementInterface.Data.Models
+@using EventsManagementInterface.Data.Services
+@inject RegistrationService registrationService
+
+<PageTitle>Vendor Input</PageTitle>
+
+<form @onsubmit="SubmitVendorInput">
+    <div class="card-custom p-5">
+        <div class="card-body-custom">
+            <div class="row mb-3">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="vendorInputGuestIndentificationNumber">Guest Identification Number</label>
+                    <input type="number" min="1000" max="9999" class="form-control" id="vendorInputGuestIndentificationNumber" @bind-value="vendorInput.GuestIdentificationNumber">
+                </div>
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="vendorInputAlcoholicDrinks">Alcoholic Drink(s)</label>
+                    <select class="form-control" id="vendorInputAlcoholicDrinks" @bind="vendorInput.AlcoholicDrinkCounter">
+                        <option selected="selected">0</option>
+                        @for (int i = 1; i < 11; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="vendorInputNonAlcoholicDrinks">Non-Alcoholic Drink(s)</label>
+                    <select class="form-control" id="vendorInputNonAlcoholicDrinks" @bind="vendorInput.NonAlcoholicDrinkCounter">
+                        <option selected="selected">0</option>
+                        @for (int i = 1; i < 11; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-lg-12 col-sm-12">
+                    <label for="vendorInputFood">Food</label>
+                    <select class="form-control" id="vendorInputFood" @bind="vendorInput.FoodCounter">
+                        <option selected="selected">0</option>
+                        @for (int i = 1; i < 11; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Submit" />
+        </div>
+    </div>
+</form>
+<Modal @ref="vendorInputOutcome">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>@vendorInputModal.Title</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel Style="font-weight:100">@vendorInputModal.Message</FieldLabel>
+            </Field>
+            <Div Class="mb-2"></Div>
+            @if (vendorInputModal.Success)
+            {
+                <Field>
+                    <FieldLabel><b>@vendorInputModal.GuestIdentificationNumber</b></FieldLabel>
+                </Field>
+            }
+            else
+            {
+                <Field>
+                    <UnorderedList>
+                        @foreach (string error in vendorInputModal.Errors)
+                        {
+                            <UnorderedListItem>@error</UnorderedListItem>
+                        }
+                    </UnorderedList>
+                </Field>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+@code {
+    private VendorInput vendorInput;
+    private Modal vendorInputOutcome;
+    private VendorInputModal vendorInputModal;
+
+    private Task ShowModal()
+    {
+        return vendorInputOutcome.Show();
+    }
+
+    private Task HideModal()
+    {
+        return vendorInputOutcome.Hide();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        vendorInput = new VendorInput();
+        vendorInputModal = new VendorInputModal();
+        vendorInputModal.Errors = new List<string>();
+    }
+
+    public async Task SubmitVendorInput()
+    {
+        //registrationModal = registrationService.RegisterAttendee(registration);
+        //ShowModal();
+
+        //if(registrationModal.Success)
+        //{
+        //    registration = new Data.Models.Registration();
+        //}
+    }
+}
