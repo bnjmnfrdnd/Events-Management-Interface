@@ -39,7 +39,8 @@ namespace EventsManagementInterface.Data.Services
                     EmailAddress = registration.EmailAddress,
                     NumberOfGuests = registration.NumberOfGuests,
                     CreatedDateTime = DateTime.Now,
-                    DrinkTokenAllowance = registration.NumberOfGuests * 2,
+                    AlcoholicDrinkTokenAllowance = registration.NumberOfGuests * 2,
+                    NonAlcoholicDrinkTokenAllowance = registration.NumberOfGuests * 2,
                     FoodTokenAllowance = registration.NumberOfGuests * 2,
                     Archived = false,
                 };
