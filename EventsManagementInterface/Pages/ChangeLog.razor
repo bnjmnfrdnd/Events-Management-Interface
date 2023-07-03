@@ -1,15 +1,36 @@
-﻿@page "/Changelog"
-@using EventsManagementInterface.Data.Models
-@inject EventsManagementInterface.Data.Services.AdministrationService administrationService
+﻿@page "/changelog"
 
 <PageTitle>Change Log</PageTitle>
 
-<h1>Change Log</h1>
-<div class="mt-5">
-    <h4><b>1.0.0</b></h4>
-    <ul>
-        <li><label>User Acceptance Testing site: <a href="https://uat-coloplastfunday.azurewebsites.net/" target="blank">https://uat-coloplastfunday.azurewebsites.net/</a></label></li>
-        <li>Vendor input page: <a href="https://uat-coloplastfunday.azurewebsites.net/vendor/input" target="blank">https://uat-coloplastfunday.azurewebsites.net/vendor/input</a></li>
-        <li>Attendee registration page: <a href="https://uat-coloplastfunday.azurewebsites.net/registration" target="blank">https://uat-coloplastfunday.azurewebsites.net/registration</a></li>
-    </ul>
+<div class="card-custom p-5">
+    <div class="card-body-custom">
+            <h1>Change Log</h1>
+        <div class="row mb-3">
+            <div class="form-group col-lg-12 col-sm-12">
+                <h4><b>1.0.0</b></h4>
+                <ul>
+                    <li>User Acceptance Testing site: <a href="https://uat-coloplastfunday.azurewebsites.net/" target="blank">https://uat-coloplastfunday.azurewebsites.net/</a></li>
+                    <li>Vendor input page: <a href="https://uat-coloplastfunday.azurewebsites.net/vendor/input" target="blank">https://uat-coloplastfunday.azurewebsites.net/vendor/input</a></li>
+                    <li>Attendee registration page: <a href="https://uat-coloplastfunday.azurewebsites.net/registration" target="blank">https://uat-coloplastfunday.azurewebsites.net/registration</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="form-group col-lg-12 col-sm-12">
+                <h4><b>1.0.1</b></h4>
+                <ul>
+                    <li>Added vendor and change log page to the navigation menu</li>
+                    <li>Updated the colour scheme to be more user-friendly and less distracting</li>
+                    <li>Vendor input now has validation to prevent submitting data with: 
+                        <ul>
+                            <li>No GIN number </li>
+                            <li>Incorrect GIN number</li>
+                            <li>No allowance token value provided</li>
+                            <li>GIN number with an exceeded allowance limit</li>                            
+                        </ul> 
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
