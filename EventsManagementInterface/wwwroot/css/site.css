@@ -117,7 +117,7 @@ select {
         border-radius: 0px !important;
     }
 
-input[type=text], input[type=date] {
+input[type=text], input[type=date], input[type=number] {
     background-color: transparent !important;
     border-bottom: 1px solid grey;
     border-top: none;
