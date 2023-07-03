@@ -1,4 +1,5 @@
-﻿using EventsManagementInterface.Data.Models;
+﻿using EventsManagementInterface.Data.Models.Attendee;
+using EventsManagementInterface.Data.Models.Vendor;
 using System.Globalization;
 
 namespace EventsManagementInterface.Data.Services

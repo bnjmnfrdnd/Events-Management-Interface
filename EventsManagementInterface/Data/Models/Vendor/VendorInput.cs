@@ -1,4 +1,4 @@
-﻿namespace EventsManagementInterface.Data.Models
+﻿namespace EventsManagementInterface.Data.Models.Vendor
 {
     public class VendorInput
     {
