@@ -1,6 +1,4 @@
-﻿using EventsManagementInterface.Data.Models;
-
-namespace EventsManagementInterface.Data.Models
+﻿namespace EventsManagementInterface.Data.Models.Administration
 {
     public class Log : BaseModel
     {

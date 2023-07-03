@@ -1,6 +1,5 @@
 using EventsManagementInterface.Areas.Identity;
 using EventsManagementInterface.Data;
-using EventsManagementInterface.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using EventsManagementInterface.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

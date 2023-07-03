@@ -18,7 +18,7 @@ a, .btn-link {
 
 .btn-primary {
     color: #fff;
-    background-color: rebeccapurple;
+    background-color: firebrick;
     border-color: transparent;
 }
 
@@ -134,7 +134,7 @@ input[type=text], input[type=date], input[type=number] {
 
 .action-buttons {
     cursor: pointer;
-    color: rebeccapurple;
+    color: firebrick;
     margin-right: 25px;
 }
 

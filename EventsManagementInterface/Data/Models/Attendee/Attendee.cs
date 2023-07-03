@@ -1,4 +1,4 @@
-﻿namespace EventsManagementInterface.Data.Models
+﻿namespace EventsManagementInterface.Data.Models.Attendee
 {
     public class Attendee : Registration
     {

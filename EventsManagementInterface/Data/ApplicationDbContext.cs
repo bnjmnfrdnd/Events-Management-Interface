@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using EventsManagementInterface.Data.Models;
+using EventsManagementInterface.Data.Models.Vendor;
+using EventsManagementInterface.Data.Models.Administration;
+using EventsManagementInterface.Data.Models.Attendee;
 
 namespace EventsManagementInterface.Data
 {

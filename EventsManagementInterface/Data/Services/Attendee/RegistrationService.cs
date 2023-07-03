@@ -1,4 +1,6 @@
-﻿using EventsManagementInterface.Data.Models;
+﻿using EventsManagementInterface.Data.Models.Administration;
+using EventsManagementInterface.Data.Models.Attendee;
+using EventsManagementInterface.Data.Models;
 using System.Globalization;
 
 namespace EventsManagementInterface.Data.Services
@@ -15,7 +17,7 @@ namespace EventsManagementInterface.Data.Services
             this.logService = logService;
         }
 
-        public RegistrationModal RegisterAttendee(Models.Registration registration)
+        public RegistrationModal RegisterAttendee(Registration registration)
         {
             try
             {
@@ -66,7 +68,7 @@ namespace EventsManagementInterface.Data.Services
             }
         }
 
-        public RegistrationModal ValidateRegistration(Models.Registration registration)
+        public RegistrationModal ValidateRegistration(Registration registration)
         {
             RegistrationModal registrationModal = new RegistrationModal();
             registrationModal.Errors = new List<string>();

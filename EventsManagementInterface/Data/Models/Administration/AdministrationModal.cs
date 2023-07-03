@@ -1,6 +1,6 @@
-﻿namespace EventsManagementInterface.Data.Models
+﻿namespace EventsManagementInterface.Data.Models.Administration
 {
-    public class RegistrationModal
+    public class AdministrationModal
     {
         public string Title { get; set; }
         public string Message { get; set; }

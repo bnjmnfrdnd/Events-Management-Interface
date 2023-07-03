@@ -1,4 +1,5 @@
-﻿using EventsManagementInterface.Data.Models;
+﻿using EventsManagementInterface.Data.Models.Administration;
+
 namespace EventsManagementInterface.Data.Services
 {
     public class LogService
