@@ -1,5 +1,6 @@
 ﻿using EventsManagementInterface.Data.Models.Attendee;
 using EventsManagementInterface.Data.Models.Vendor;
+using EventsManagementInterface.Data.Models;
 using System.Globalization;
 
 namespace EventsManagementInterface.Data.Services
@@ -16,19 +17,19 @@ namespace EventsManagementInterface.Data.Services
             this.logService = logService;
         }
 
-        public async Task<VendorInputModal> SubmitVendorInput(VendorInput vendorInput)
+        public async Task<BaseModal> SubmitVendorInput(VendorInput vendorInput)
         {
             try
             {
                 bool allowanceExceeded = false;
                 List<string> errors = new List<string>();
-                VendorInputModal vendorInputModal = new VendorInputModal();
+                BaseModal vendorInputModal = new();
 
                 #region If no vendor input
 
                 if (vendorInput.AlcoholicDrinkToken == 0 && vendorInput.NonAlcoholicDrinkToken == 0 && vendorInput.FoodToken == 0)
                 {
-                    vendorInputModal = new VendorInputModal
+                    vendorInputModal = new BaseModal
                     {
                         GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                         GuestName = $"",
@@ -49,7 +50,7 @@ namespace EventsManagementInterface.Data.Services
                 if (attendee == null)
                 {
 
-                    vendorInputModal = new VendorInputModal
+                    vendorInputModal = new BaseModal
                     {
                         GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                         GuestName = "",
@@ -87,7 +88,7 @@ namespace EventsManagementInterface.Data.Services
 
                 if (allowanceExceeded)
                 {
-                    vendorInputModal = new VendorInputModal
+                    vendorInputModal = new BaseModal
                     {
                         GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                         GuestName = $"{attendee.FirstName} {attendee.LastName}",
@@ -112,7 +113,7 @@ namespace EventsManagementInterface.Data.Services
                 attendee.NonAlcoholicDrinkTokenAllowance -= vendorInput.NonAlcoholicDrinkToken;
                 attendee.FoodTokenAllowance -= vendorInput.FoodToken;
 
-                vendorInputModal = new VendorInputModal
+                vendorInputModal = new BaseModal
                 {
                     GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                     GuestName = $"{attendee.FirstName} {attendee.LastName}",
@@ -136,7 +137,7 @@ namespace EventsManagementInterface.Data.Services
             }
             catch (Exception ex)
             {
-                VendorInputModal vendorInputModal = new VendorInputModal
+                BaseModal vendorInputModal = new BaseModal
                 {
                     GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                     GuestName = String.Empty,

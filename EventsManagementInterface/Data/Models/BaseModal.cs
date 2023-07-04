@@ -1,6 +1,6 @@
-﻿namespace EventsManagementInterface.Data.Models.Vendor
+﻿namespace EventsManagementInterface.Data.Models
 {
-    public class VendorInputModal
+    public class BaseModal
     {
         public int GuestIdentificationNumber { get; set; }
         public string GuestName { get; set; }

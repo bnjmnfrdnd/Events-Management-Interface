@@ -17,11 +17,11 @@ namespace EventsManagementInterface.Data.Services
             this.logService = logService;
         }
 
-        public RegistrationModal RegisterAttendee(Registration registration)
+        public BaseModal RegisterAttendee(Registration registration)
         {
             try
             {
-                RegistrationModal registrationModal = ValidateRegistration(registration);
+                BaseModal registrationModal = ValidateRegistration(registration);
 
                 if (!registrationModal.Success) 
                 {
@@ -68,9 +68,9 @@ namespace EventsManagementInterface.Data.Services
             }
         }
 
-        public RegistrationModal ValidateRegistration(Registration registration)
+        public BaseModal ValidateRegistration(Registration registration)
         {
-            RegistrationModal registrationModal = new RegistrationModal();
+            BaseModal registrationModal = new();
             registrationModal.Errors = new List<string>();
             registrationModal.Success = true;
 
