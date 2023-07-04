@@ -5,21 +5,22 @@
 @inject AdministrationService administrationService
 
 <PageTitle>Attendance Registration</PageTitle>
-<div class="row">
-    <form @onsubmit="UpdateTokenAllowance">
         <h1 class="mb-5">Guest Management</h1>
-        <div class="card-custom p-3 col-lg-6 col-sm-12">
+<div class="row justify-content-evenly">
+
+    <form @onsubmit="UpdateTokenAllowance">
+        <div class="card-custom p-3 col-lg-5 col-md-12 col-sm-12 mb-2">
             <div class="card-body-custom">
                 <h3>Update token allowance </h3>
                 <h5 class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</h5>
                 <div class="row mb-3 mt-3">
-                    <div class="form-group col-lg-12 col-sm-12">
+                    <div class="form-group">
                         <label for="guestIdentificationNumber">Guest Identification Number</label>
                         <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-lg-12 col-sm-12">
+                    <div class="form-group">
                         <label for="alcoholicDrinkTokenAllowance">Alcoholic Drink Allowance</label>
                         <select class="form-control" id="alcoholicDrinkTokenAllowance" @bind="guestManagement.AlcoholicDrinkTokenAllowance">
                             <option value="" selected></option>
@@ -31,7 +32,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-lg-12 col-sm-12">
+                    <div class="form-group">
                         <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcoholic Drink Allowance</label>
                         <select class="form-control" id="nonAlcoholicDrinkTokenAllowance" @bind="guestManagement.NonAlcoholicDrinkTokenAllowance">
                             <option value="" selected></option>
@@ -43,7 +44,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-lg-12 col-sm-12">
+                    <div class="form-group">
                         <label for="foodTokenAllowance">Food Token Allowance</label>
                         <select class="form-control" id="foodTokenAllowance" @bind="guestManagement.FoodTokenAllowance">
                             <option value="" selected></option>
@@ -61,11 +62,11 @@
     </form>
 
     <form @onsubmit="CheckTokenAllowance">
-        <div class="card-custom p-3 col-lg-6 col-sm-12">
+        <div class="card-custom p-3 col-lg-5 col-md-12 col-sm-12 mb-2">
             <div class="card-body-custom">
                 <h3>Check token allowance </h3>
                 <div class="row mb-3 mt-3">
-                    <div class="form-group col-lg-12 col-sm-12">
+                    <div class="form-group">
                         <label for="guestIdentificationNumber">Guest Identification Number</label>
                         <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
                     </div>
