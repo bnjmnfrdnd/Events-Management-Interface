@@ -1,82 +1,112 @@
-﻿@page "/admin/guestmanagement"
-@using EventsManagementInterface.Data.Models.Attendee
+﻿@page "/administration/guestmanagement"
+@using EventsManagementInterface.Data.Models;
 @using EventsManagementInterface.Data.Models.Administration;
 @using EventsManagementInterface.Data.Services
 @inject AdministrationService administrationService
 
 <PageTitle>Attendance Registration</PageTitle>
+<div class="row">
+    <form @onsubmit="UpdateTokenAllowance">
+        <h1 class="mb-5">Guest Management</h1>
+        <div class="card-custom p-3 col-lg-6 col-sm-12">
+            <div class="card-body-custom">
+                <h3>Update token allowance </h3>
+                <h5 class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</h5>
+                <div class="row mb-3 mt-3">
+                    <div class="form-group col-lg-12 col-sm-12">
+                        <label for="guestIdentificationNumber">Guest Identification Number</label>
+                        <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-12 col-sm-12">
+                        <label for="alcoholicDrinkTokenAllowance">Alcoholic Drink Allowance</label>
+                        <select class="form-control" id="alcoholicDrinkTokenAllowance" @bind="guestManagement.AlcoholicDrinkTokenAllowance">
+                            <option value="" selected></option>
+                            @for (int i = 1; i < 11; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-12 col-sm-12">
+                        <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcoholic Drink Allowance</label>
+                        <select class="form-control" id="nonAlcoholicDrinkTokenAllowance" @bind="guestManagement.NonAlcoholicDrinkTokenAllowance">
+                            <option value="" selected></option>
+                            @for (int i = 1; i < 11; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-12 col-sm-12">
+                        <label for="foodTokenAllowance">Food Token Allowance</label>
+                        <select class="form-control" id="foodTokenAllowance" @bind="guestManagement.FoodTokenAllowance">
+                            <option value="" selected></option>
+                            @for (int i = 1; i < 11; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
 
-<form @onsubmit="SubmitAttendanceRegistration">
-    <div class="card-custom p-5">
-        <div class="card-body-custom">
-            <h3 class="mb-2">Hello, please register your attendance.</h3>
-            <div class="row mb-3 mt-3">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationFirstName">First name</label>
-                    <input type="text" class="form-control" id="registrationFirstName" @bind-value="registration.FirstName" style="text-transform:capitalize !important;">
-                </div>
+                <input type="submit" class="btn btn-primary" value="Submit" />
             </div>
-            <div class="row mb-3">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationMiddleName">Middle name(s)</label>
-                    <input type="text" class="form-control" id="registrationMiddleName" @bind-value="registration.MiddleName" style="text-transform:capitalize !important;">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationLastName">Last name</label>
-                    <input type="text" class="form-control" id="registrationLastName" @bind-value="registration.LastName" style="text-transform:capitalize !important;">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationDateOfBirth">Date of birth</label>
-                    <input type="date" class="form-control" id="registrationDateOfBirth" @bind-value="registration.DateOfBirth">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationEmailAddress">Email address</label>
-                    <input type="text" class="form-control" id="registrationEmailAddress" @bind-value="registration.EmailAddress">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="registrationNumberOfGuests">Number of guests</label>
-                    <select class="form-control" id="registrationNumberOfGuests" @bind="registration.NumberOfGuests">
-                        @for(int i = 1; i < 11; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                </div>
-            </div>
-
-            <input type="submit" class="btn btn-primary" value="Submit" />
         </div>
-    </div>
-</form>
-<Modal @ref="registrationOutcome">
+    </form>
+
+    <form @onsubmit="CheckTokenAllowance">
+        <div class="card-custom p-3 col-lg-6 col-sm-12">
+            <div class="card-body-custom">
+                <h3>Check token allowance </h3>
+                <div class="row mb-3 mt-3">
+                    <div class="form-group col-lg-12 col-sm-12">
+                        <label for="guestIdentificationNumber">Guest Identification Number</label>
+                        <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                    </div>
+                </div>
+
+                <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<Modal @ref="modal">
     <ModalContent Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>@registrationModal.Title</ModalTitle>
+            <ModalTitle>@baseModal.Title</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Field>
-                <FieldLabel Style="font-weight:100">@registrationModal.Message</FieldLabel>                
+                <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>
             </Field>
             <Div Class="mb-2"></Div>
-            @if (registrationModal.Success)
+            @if (baseModal.Success)
             {
-                <Field>
-                    <FieldLabel><b>@registrationModal.GuestIdentificationNumber</b></FieldLabel>
-                </Field>
+                @if (baseModal.TokensRemaining != null && baseModal.TokensRemaining.Count != 0)
+                {
+                    <Field>
+                        <FieldLabel>Tokens Remaining:</FieldLabel>
+                        <UnorderedList>
+                            @foreach (string tokens in baseModal.TokensRemaining)
+                            {
+                                <UnorderedListItem>@tokens</UnorderedListItem>
+                            }
+                        </UnorderedList>
+                    </Field>
+                }
             }
             else
             {
                 <Field>
                     <UnorderedList>
-                        @foreach (string error in registrationModal.Errors)
+                        @foreach (string error in baseModal.Errors)
                         {
                             <UnorderedListItem>@error</UnorderedListItem>
                         }
@@ -92,35 +122,50 @@
 
 
 @code {
-    private Data.Models.Registration registration;
-    private Modal registrationOutcome;
-    private RegistrationModal registrationModal;
+    private Modal modal;
+    private BaseModal baseModal;
+    private EventsManagementInterface.Data.Models.Administration.GuestManagement guestManagement;
 
     private Task ShowModal()
     {
-        return registrationOutcome.Show();
+        return modal.Show();
     }
 
     private Task HideModal()
     {
-        return registrationOutcome.Hide();
+        return modal.Hide();
     }
 
     protected override async Task OnInitializedAsync()
     {
-        registration = new Data.Models.Registration();
-        registration.DateOfBirth = DateTime.Now.AddYears(-35);
-        registrationModal = new RegistrationModal();
-        registrationModal.Errors = new List<string>();
+        guestManagement = new();
+        baseModal = new BaseModal();
+        baseModal.Errors = new List<string>();
     }
 
-    public async Task SubmitAttendanceRegistration()
+    public async Task UpdateTokenAllowance()
     {
+        baseModal = await administrationService.UpdateTokenAllowance(guestManagement);
+
         ShowModal();
 
-        if(registrationModal.Success)
+        if (baseModal.Success)
         {
-            registration = new Data.Models.Registration();
+            guestManagement = new();
         }
     }
+
+    public async Task CheckTokenAllowance()
+    {
+        baseModal = await administrationService.CheckTokenAllowance(guestManagement);
+
+        ShowModal();
+
+        if (baseModal.Success)
+        {
+            guestManagement = new();
+        }
+    }
+
+
 }

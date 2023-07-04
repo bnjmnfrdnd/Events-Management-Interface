@@ -1,4 +1,5 @@
 ﻿@page "/Registration"
+@using EventsManagementInterface.Data.Models
 @using EventsManagementInterface.Data.Models.Attendee
 @using EventsManagementInterface.Data.Services
 @inject RegistrationService registrationService
@@ -6,7 +7,7 @@
 <PageTitle>Attendance Registration</PageTitle>
 
 <form @onsubmit="SubmitAttendanceRegistration">
-    <div class="card-custom p-5">
+    <div class="card-custom p-3">
         <div class="card-body-custom">
             <h3 class="mb-2">Hello, please register your attendance.</h3>
             <div class="row mb-3 mt-3">
@@ -55,27 +56,26 @@
         </div>
     </div>
 </form>
-<Modal @ref="registrationOutcome">
+<Modal @ref="modal">
     <ModalContent Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>@registrationModal.Title</ModalTitle>
+            <ModalTitle>@baseModal.Title</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Field>
-                <FieldLabel Style="font-weight:100">@registrationModal.Message</FieldLabel>                
-            </Field>
+                <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>              </Field>
             <Div Class="mb-2"></Div>
-            @if (registrationModal.Success)
+            @if (baseModal.Success)
             {
                 <Field>
-                    <FieldLabel><b>@registrationModal.GuestIdentificationNumber</b></FieldLabel>
+                    <FieldLabel><b>@baseModal.GuestIdentificationNumber</b></FieldLabel>
                 </Field>
             }
             else
             {
                 <Field>
                     <UnorderedList>
-                        @foreach (string error in registrationModal.Errors)
+                        @foreach (string error in baseModal.Errors)
                         {
                             <UnorderedListItem>@error</UnorderedListItem>
                         }
@@ -91,34 +91,34 @@
 
 
 @code {
+    private Modal modal;
+    private BaseModal baseModal;
     private Data.Models.Registration registration;
-    private Modal registrationOutcome;
-    private RegistrationModal registrationModal;
 
     private Task ShowModal()
     {
-        return registrationOutcome.Show();
+        return modal.Show();
     }
 
     private Task HideModal()
     {
-        return registrationOutcome.Hide();
+        return modal.Hide();
     }
 
     protected override async Task OnInitializedAsync()
     {
         registration = new Data.Models.Registration();
         registration.DateOfBirth = DateTime.Now.AddYears(-35);
-        registrationModal = new RegistrationModal();
-        registrationModal.Errors = new List<string>();
+        baseModal = new BaseModal();
+        baseModal.Errors = new List<string>();
     }
 
     public async Task SubmitAttendanceRegistration()
     {
-        registrationModal = registrationService.RegisterAttendee(registration);
+        baseModal = registrationService.RegisterAttendee(registration);
         ShowModal();
 
-        if(registrationModal.Success)
+        if (baseModal.Success)
         {
             registration = new Data.Models.Registration();
         }

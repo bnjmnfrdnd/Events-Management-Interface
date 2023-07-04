@@ -1,4 +1,5 @@
 ﻿@page "/vendor/input"
+@using EventsManagementInterface.Data.Models
 @using EventsManagementInterface.Data.Models.Vendor
 @using EventsManagementInterface.Data.Services
 @inject VendorService vendorService
@@ -6,7 +7,7 @@
 <PageTitle>Vendor Input</PageTitle>
 
 <form @onsubmit="SubmitVendorInput">
-    <div class="card-custom p-5">
+    <div class="card-custom p-3">
         <div class="card-body-custom">
             <div class="row mb-3">
                 <div class="form-group col-lg-12 col-sm-12">
@@ -49,22 +50,23 @@
         </div>
     </div>
 </form>
-<Modal @ref="vendorInputOutcome">
+
+<Modal @ref="modal">
     <ModalContent Size="ModalSize.Large">
         <ModalHeader>
-            <ModalTitle>@vendorInputModal.Title</ModalTitle>
+            <ModalTitle>@baseModal.Title</ModalTitle>
         </ModalHeader>
         <ModalBody>
             <Field>
-                <FieldLabel Style="font-weight:100">@vendorInputModal.Message</FieldLabel>
+                <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>
             </Field>
             <Div Class="mb-2"></Div>
-            @if (vendorInputModal.Success)
+            @if (baseModal.Success)
             {
                 <Field>
                     <FieldLabel>Tokens Remaining:</FieldLabel>
                     <UnorderedList>
-                        @foreach (string tokens in vendorInputModal.TokensRemaining)
+                        @foreach (string tokens in baseModal.TokensRemaining)
                         {
                             <UnorderedListItem>@tokens</UnorderedListItem>
                         }
@@ -75,7 +77,7 @@
             {
                 <Field>
                     <UnorderedList>
-                        @foreach (string error in vendorInputModal.Errors)
+                        @foreach (string error in baseModal.Errors)
                         {
                             <UnorderedListItem>@error</UnorderedListItem>
                         }
@@ -92,33 +94,33 @@
 
 @code {
     private VendorInput vendorInput;
-    private Modal vendorInputOutcome;
-    private VendorInputModal vendorInputModal;
+    private Modal modal;
+    private BaseModal baseModal;
 
     private Task ShowModal()
     {
-        return vendorInputOutcome.Show();
+        return modal.Show();
     }
 
     private Task HideModal()
     {
-        return vendorInputOutcome.Hide();
+        return modal.Hide();
     }
 
     protected override async Task OnInitializedAsync()
     {
         vendorInput = new VendorInput();
-        vendorInputModal = new VendorInputModal();
-        vendorInputModal.Errors = new List<string>();
+        baseModal = new BaseModal();
+        baseModal.Errors = new List<string>();
     }
 
     public async Task SubmitVendorInput()
     {
-        vendorInputModal = await vendorService.SubmitVendorInput(vendorInput);
+        baseModal = await vendorService.SubmitVendorInput(vendorInput);
 
         ShowModal();
 
-        if (vendorInputModal.Success)
+        if (baseModal.Success)
         {
             vendorInput = new VendorInput();
         }
