@@ -49,7 +49,6 @@ namespace EventsManagementInterface.Data.Services
 
                 if (attendee == null)
                 {
-
                     vendorInputModal = new BaseModal
                     {
                         GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,

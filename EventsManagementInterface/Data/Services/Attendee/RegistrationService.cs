@@ -55,11 +55,45 @@ namespace EventsManagementInterface.Data.Services
                 
                 attendee.GuestIdentificationNumber = newGuestIdentificationNumber;
                 registrationModal.GuestIdentificationNumber = newGuestIdentificationNumber;
+                
+                bool emailSent = Utility.SendEmail(new Models.Email.Email
+                {
+                    Recipient = attendee.EmailAddress,
+                    Subject = "Coloplast Fund Day Registration",
+                    HTMLMessage =
+                    $"Hi {attendee.FirstName}, " +
+                    $"<br/><br/> " +
+                    $"Thank you for registering your attendance for the Coloplast Fun Day 2023!" +
+                    $"<br/><br/>" +
+                    $"Your Guest Identification Number (GIN) is: <b>{attendee.GuestIdentificationNumber}</b>. " +
+                    $"<br/><br/>" +
+                    $"Please dont forget it; you will need to inform the vendor of your GIN when you want to redeem your drink and food tokens." +
+                    $"<br/><br/>" +
+                    $"Your token allowance is: " +
+                    $"<ul>" +
+                    $"<li>Alcoholic Drink Tokens: {attendee.AlcoholicDrinkTokenAllowance}</li>" +
+                    $"<li>Non-Alcoholic Drink Tokens: {attendee.NonAlcoholicDrinkTokenAllowance}</li>" +
+                    $"<li>Food Tokens: {attendee.FoodTokenAllowance}</li>" +
+                    $"</ul>" +
+                    $"<br/>" +
+                    $"Please contact People & Culture for any queries." +
+                    $"<br><br/>" +
+                    $"Kind regards, <br>" +
+                    $"Coloplast Fun Day Team"  
+                });
 
-                database.Add(attendee);
-                database.SaveChanges();
+                if (emailSent)
+                {
+                    attendee.GuestIdentificationNumberEmailSent = true;
+                    database.Add(attendee);
+                    database.SaveChanges();
 
-                return registrationModal;
+                    return registrationModal;
+                }
+                else
+                {
+                    return registrationModal;
+                }
             }
             catch (Exception ex)
             {
@@ -121,7 +155,7 @@ namespace EventsManagementInterface.Data.Services
             if (registrationModal.Success)
             {
                 registrationModal.Title = "Your registration has been successful.";
-                registrationModal.Message = "An email has been sent to you, with your unique Guest Identification Number (GIN). Your GIN is also in bold below.";
+                registrationModal.Message = "An email has been sent to you with your 4-digit Guest Identification Number (GIN).";
             }
             else
             {
