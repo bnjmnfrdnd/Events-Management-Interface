@@ -5,14 +5,13 @@
 @inject AdministrationService administrationService
 
 <PageTitle>Attendance Registration</PageTitle>
-        <h1 class="mb-5">Guest Management</h1>
-<div class="row justify-content-evenly">
-
-    <form @onsubmit="UpdateTokenAllowance">
-        <div class="card-custom p-3 col-lg-5 col-md-12 col-sm-12 mb-2">
+<h1 class="mb-5">Guest Management</h1>
+<div class="row justify-content-between">
+    <form @onsubmit="UpdateTokenAllowance" class="col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="card-custom p-3 ">
             <div class="card-body-custom">
                 <h3>Update token allowance </h3>
-                <h5 class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</h5>
+                <p class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</p>
                 <div class="row mb-3 mt-3">
                     <div class="form-group">
                         <label for="guestIdentificationNumber">Guest Identification Number</label>
@@ -61,10 +60,10 @@
         </div>
     </form>
 
-    <form @onsubmit="CheckTokenAllowance">
-        <div class="card-custom p-3 col-lg-5 col-md-12 col-sm-12 mb-2">
+    <form @onsubmit="CheckTokenAllowance" class="col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="card-custom p-3">
             <div class="card-body-custom">
-                <h3>Check token allowance </h3>
+                <h3 class="mb-5">Check token allowance </h3>
                 <div class="row mb-3 mt-3">
                     <div class="form-group">
                         <label for="guestIdentificationNumber">Guest Identification Number</label>
@@ -142,6 +141,7 @@
         guestManagement = new();
         baseModal = new BaseModal();
         baseModal.Errors = new List<string>();
+        baseModal.TokensRemaining = new List<string>();
     }
 
     public async Task UpdateTokenAllowance()
