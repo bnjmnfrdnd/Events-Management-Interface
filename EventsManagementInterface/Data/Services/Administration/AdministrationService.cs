@@ -131,5 +131,44 @@ namespace EventsManagementInterface.Data.Services
                 return baseModal;
             }
         }
+
+        public async Task<double> GetTotalAvailableAlcoholDrinkTokens()
+        {
+            List<Attendee> attendees = database.Attendee.Where(x => x.Archived == false).ToList();
+            double totalAvailableAlcoholDrinkTokens = 0;
+
+            foreach(Attendee attendee in attendees)
+            {
+                totalAvailableAlcoholDrinkTokens += attendee.AlcoholicDrinkTokenAllowance;
+            }
+
+            return totalAvailableAlcoholDrinkTokens;
+        }
+
+        public async Task<double> GetTotalAvailableNonAlcoholDrinkTokens()
+        {
+            List<Attendee> attendees = database.Attendee.Where(x => x.Archived == false).ToList();
+            double totalAvailableNonAlcoholDrinkTokens = 0;
+
+            foreach (Attendee attendee in attendees)
+            {
+                totalAvailableNonAlcoholDrinkTokens += attendee.NonAlcoholicDrinkTokenAllowance;
+            }
+
+            return totalAvailableNonAlcoholDrinkTokens;
+        }
+
+        public async Task<double> GetTotalAvailableFoodTokens()
+        {
+            List<Attendee> attendees = database.Attendee.Where(x => x.Archived == false).ToList();
+            double totalAvailableFoodTokens = 0;
+
+            foreach (Attendee attendee in attendees)
+            {
+                totalAvailableFoodTokens += attendee.FoodTokenAllowance;
+            }
+
+            return totalAvailableFoodTokens;
+        }
     }
 }

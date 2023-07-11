@@ -4,23 +4,36 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
-    <div class="card-body-custom">
-        <BarChart @ref="attendanceChart" Type="ChartType.Bar" TItem="double" />
+<div class="row justify-content-evenly mt-2">
+    <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
+        <div class="card-body-custom">
+            <BarChart @ref="attendanceChart" Type="ChartType.Bar" TItem="double" />
+        </div>
+    </div>
+    <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
+        <div class="card-body-custom">
+            <DoughnutChart @ref="allowanceDonutChart" Type="ChartType.Bar" TItem="double" />
+        </div>
     </div>
 </div>
 
-
 @code {
+
+    string[] allowanceLabels = { "Alcohol Drink Tokens", "Non-Alcohol Drink Tokens", "Food Tokens" };
     string[] attendanceLabels = { "Attending", "Invited" };
     BarChart<double> attendanceChart;
-    private List<Attendee> attendees;
+    DoughnutChart<double> allowanceDonutChart;
+
+    List<Attendee> attendees;
+    double alcoholicDrinkTokenAllowance = 0;
+    double nonAlcoholicDrinkTokenAllowance = 0;
+    double foodTokenAllowance = 0;
 
     List<string> chartBackgroundColors = new List<string>
     {
-        ChartColor.FromRgba(97,0,109, 0.5f),
-        ChartColor.FromRgba(192,0,255, 0.5f),
-        ChartColor.FromRgba(109,0,171, 0.5f),
+        ChartColor.FromRgba(140,55,62, 0.5f),
+        ChartColor.FromRgba(188,74,60, 0.5f),
+        ChartColor.FromRgba(178,34,34, 0.5f),
     };
 
     List<string> chartBorderColors = new List<string>
@@ -33,6 +46,12 @@
         if (firstRender)
         {
             attendees = await administrationService.GetAttendees();
+            alcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableAlcoholDrinkTokens();
+            nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
+            foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
+
+            await allowanceDonutChart.Clear();
+            await allowanceDonutChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetTokenAllowanceChartDataset());
             await attendanceChart.Clear();
             await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
         }
@@ -50,12 +69,34 @@
             };
     }
 
+    private DoughnutChartDataset<double> GetTokenAllowanceChartDataset()
+    {        
+        return new()
+            {
+                Label = "Total Remaining Allowances",
+                Data = TokenAllowanceDataSet(),
+                BackgroundColor = chartBackgroundColors,
+                BorderColor = chartBorderColors,
+                BorderWidth = 3
+            };
+    }
+
     List<double> AttendeeDataSet()
     {
         return new List<double>
         {
-            attendees.Count(),
+            attendees.Count,
             250
+        };
+    }
+
+    List<double> TokenAllowanceDataSet()
+    {
+        return new List<double>
+        {
+            administrationService.GetTotalAvailableAlcoholDrinkTokens().Result,
+            administrationService.GetTotalAvailableNonAlcoholDrinkTokens().Result,
+            administrationService.GetTotalAvailableFoodTokens().Result,            
         };
     }
 }
