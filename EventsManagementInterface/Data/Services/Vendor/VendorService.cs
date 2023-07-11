@@ -2,6 +2,7 @@
 using EventsManagementInterface.Data.Models.Vendor;
 using EventsManagementInterface.Data.Models;
 using System.Globalization;
+using EventsManagementInterface.Data.Enums;
 
 namespace EventsManagementInterface.Data.Services
 {
@@ -131,8 +132,37 @@ namespace EventsManagementInterface.Data.Services
                 database.Update(attendee);
                 database.SaveChanges();
 
-                return vendorInputModal;
+                if (vendorInput.AlcoholicDrinkToken != null && vendorInput.AlcoholicDrinkToken != 0)
+                {
+                    logService.CreateLog(
+                        LogType.AlcoholicDrinkTokenUsed,
+                        "Token used",
+                        vendorInput.AlcoholicDrinkToken,
+                        vendorInput.GuestIdentificationNumber
+                    );
+                }
 
+                if (vendorInput.NonAlcoholicDrinkToken != null && vendorInput.NonAlcoholicDrinkToken != 0)
+                {
+                    logService.CreateLog(
+                        LogType.NonAlcoholicDrinkTokenUsed,
+                        "Token used",
+                        vendorInput.NonAlcoholicDrinkToken,
+                        vendorInput.GuestIdentificationNumber
+                    );
+                }
+
+                if (vendorInput.FoodToken != null && vendorInput.FoodToken != 0)
+                {
+                    logService.CreateLog(
+                        LogType.FoodTokenUsed,
+                        "Token used",
+                        vendorInput.FoodToken,
+                        vendorInput.GuestIdentificationNumber
+                    );
+                }
+
+                return vendorInputModal;
             }
             catch (Exception ex)
             {
