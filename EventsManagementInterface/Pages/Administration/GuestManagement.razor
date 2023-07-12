@@ -77,6 +77,16 @@
     </form>
 </div>
 
+<div class="row justify-content-between">
+    <div class="col-lg-6 col-md-12 col-sm-12 mb-2">
+        <div class="card-custom p-3">
+            <div class="card-body-custom">
+                <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+            </div>
+        </div>
+    </div>
+</div>
+
 <Modal @ref="modal">
     <ModalContent Size="ModalSize.Large">
         <ModalHeader>
@@ -168,5 +178,28 @@
         }
     }
 
+    private async void UploadData(InputFileChangeEventArgs document)
+    {
+        var attendee = new EventsManagementInterface.Data.Models.Attendee.Attendee();
+        MemoryStream ms = new MemoryStream();
+        await document.File.OpenReadStream().CopyToAsync(ms);
+        var bytes = ms.ToArray();
+        string commaSeperatedValues = System.Text.Encoding.UTF8.GetString(bytes.ToArray()); // need to convert to string array
 
+        List<string> lines = commaSeperatedValues.Split("\n").ToList();
+
+        foreach (string line in lines)
+        {
+            string[] words = line.Split(',');
+
+            foreach(string data in words)
+            {
+                
+            }
+
+        }
+
+        string t = "";
+        //await administrationService.UploadData(file);
+    }
 }
