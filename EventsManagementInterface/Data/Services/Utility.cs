@@ -10,7 +10,7 @@ namespace EventsManagementInterface.Data.Services
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(email.CredentialsEmail);
-            mail.To.Add(/*email.Recipient*/"benjaminferdinand@gmail.com");
+            mail.To.Add(email.Recipient/*"benjaminferdinand@gmail.com"*/);
             mail.Subject = email.Subject;
             mail.Body = email.HTMLMessage.ToString();
             mail.IsBodyHtml = true;
