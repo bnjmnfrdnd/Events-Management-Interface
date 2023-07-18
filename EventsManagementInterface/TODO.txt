@@ -1,4 +1,0 @@
-SQL database has been updated with the identity schema
-
-1. Create database schema with migrations
-2. Create registration page
