@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'uat-coloplastfunday'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AF992E6543474BEBA218B635362A5D32 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8512D912D92C432BA6A1BC11CFCBD356 }}
           package: .
