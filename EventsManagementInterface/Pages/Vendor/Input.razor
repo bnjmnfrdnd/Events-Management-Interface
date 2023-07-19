@@ -9,7 +9,7 @@
     <div class="card-custom p-3">
         <div class="card-body-custom">
             <div class="row mb-3  justify-content-center mt-2">
-                <div class="form-group col-lg-4 col-md-4 col-sm-12 text-center">
+                <div class="form-group col-lg-2 col-md-4 col-sm-4 text-center">
                     <label for="vendorInputGuestIndentificationNumber">Guest Identification Number</label>
                     <input type="number" min="1000" max="9999" class="form-control text-center" id="vendorInputGuestIndentificationNumber" @bind-value="vendorInput.GuestIdentificationNumber">
                 </div>
@@ -30,7 +30,7 @@
                         <button class="vendor-input-button" type="button" @onclick="() => InsertGuestIdentificationNumber(9)">9</button>
                     </div>
                     <div class="row justify-content-center mt-2">
-                        <button class="vendor-input-button" type="button" style="background-color: darkred !important;" @onclick="() => ClearGuestIdentificationNumber()"><span class="oi oi-x" aria-hidden="true"></span></button>
+                        <button class="vendor-input-button" type="button" style="background-color: darkred !important;" @onclick="() => ClearInput()"><span class="oi oi-x" aria-hidden="true"></span></button>
                         <button class="vendor-input-button" type="button" @onclick="() => InsertGuestIdentificationNumber(3)">0</button>
                         <button class="vendor-input-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
                     </div>
@@ -168,9 +168,12 @@
 
     }
 
-    private void ClearGuestIdentificationNumber()
+    private void ClearInput()
     {
         vendorInput.GuestIdentificationNumber = 0;
+        vendorInput.AlcoholicDrinkToken = 0;
+        vendorInput.NonAlcoholicDrinkToken = 0;
+        vendorInput.FoodToken = 0;
     }
 
     
