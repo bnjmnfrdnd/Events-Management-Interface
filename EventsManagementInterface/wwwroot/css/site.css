@@ -155,7 +155,12 @@ input[type=text], input[type=date], input[type=number] {
     }
 
 .vendor-input-button {
-    background-color: red;
-    width: 8vh;
-    height: 8vh;
+    background-color: blueviolet;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 25px;
+    margin: 5px;
+    color: white;
+    border: none;
+    font-size: 3vh;
 }
