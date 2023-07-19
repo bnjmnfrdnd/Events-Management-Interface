@@ -81,7 +81,13 @@
     <div class="col-lg-6 col-md-12 col-sm-12 mb-2">
         <div class="card-custom p-3">
             <div class="card-body-custom">
-                <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+                <h3>Upload Guest Data (.csv)</h3>
+                <a href="/help/uploadingdata" target="_blank" class="mb-5">What should my csv data look like?</a>
+                <div class="row mb-3 mt-3">
+                    <div class="form-group">
+                        <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -116,6 +122,7 @@
             {
                 <Field>
                     <UnorderedList>
+
                         @foreach (string error in baseModal.Errors)
                         {
                             <UnorderedListItem>@error</UnorderedListItem>
@@ -178,9 +185,10 @@
         }
     }
 
-    private async void UploadData(InputFileChangeEventArgs document)
+    public async void UploadData(InputFileChangeEventArgs document)
     {
-        await administrationService.UploadAttendeeData(document);
+        baseModal = await administrationService.UploadAttendeeData(document);
+        ShowModal();
     }
 
 }

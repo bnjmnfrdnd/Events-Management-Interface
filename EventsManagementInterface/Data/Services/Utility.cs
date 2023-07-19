@@ -1,5 +1,7 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using Blazorise;
+using EventsManagementInterface.Data.Models.Attendee;
 using EventsManagementInterface.Data.Models.Email;
 
 namespace EventsManagementInterface.Data.Services
@@ -42,9 +44,9 @@ namespace EventsManagementInterface.Data.Services
             mail.To.Add(email.Recipient);
             mail.Subject = $"An exception has been thrown - {function}.";
             mail.Body = $"<b>Message:</b> {exception.Message} " +
-                    $"<br>" +
+                    $"<br><br>" +
                     $"<b>Inner Exception:</b> {exception.InnerException}" +
-                    $"<b>" +
+                    $"<br><br>" +
                     $"<b>Stack trace:</b> {exception.StackTrace}";
             mail.IsBodyHtml = true;
 
@@ -66,6 +68,6 @@ namespace EventsManagementInterface.Data.Services
                 SendExceptionThrownEmail("SendExceptionThrownEmail", ex);
                 return false;
             }
-        }
+        }        
     }
 }

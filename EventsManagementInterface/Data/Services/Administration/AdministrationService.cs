@@ -10,7 +10,6 @@ namespace EventsManagementInterface.Data.Services
 {
     public class AdministrationService
     {
-
         private ApplicationDbContext database;
         private Utility utility;
 
@@ -179,10 +178,12 @@ namespace EventsManagementInterface.Data.Services
             {
                 var attendee = new Attendee();
                 List<Attendee> attendees = new List<Attendee>();
+                List<Attendee> existingAttendees = database.Attendee.Where(x => x.Archived != true).ToList();
                 MemoryStream ms = new MemoryStream();
                 await document.File.OpenReadStream().CopyToAsync(ms);
                 var bytes = ms.ToArray();
                 string commaSeperatedValues = System.Text.Encoding.UTF8.GetString(bytes.ToArray()); // need to convert to string array
+                bool attendeeExists = true;
 
                 List<string> lines = commaSeperatedValues.Split("\n").ToList();
 
@@ -194,30 +195,74 @@ namespace EventsManagementInterface.Data.Services
                     {
                         attendee = new Attendee
                         {
-                            FirstName = words[0],
-                            LastName = words.Length > 1 ? words[1] : "",
-                            EmailAddress = words.Length > 2 ? words[2] : "",
+                            FirstName = words[0].Trim(),
+                            LastName = words.Length > 1 ? words[1].Trim() : "",
+                            EmailAddress = words.Length > 2 ? words[2].Trim() : "",
                             AlcoholicDrinkTokenAllowance = words.Length > 3 ? Int32.Parse(words[3]) : 2,
                             NonAlcoholicDrinkTokenAllowance = words.Length > 4 ? Int32.Parse(words[4]) : 2,
                             FoodTokenAllowance = words.Length > 5 ? Int32.Parse(words[5]) : 2
                         };
 
-                        if (attendee.EmailAddress != null || attendee.EmailAddress != "")
+                        if (attendee.EmailAddress != null && attendee.EmailAddress != "")
+                        {
+
+                            foreach (Attendee att in existingAttendees)
+                            {
+                                if (att.EmailAddress.ToUpper().Trim() != attendee.EmailAddress.ToUpper().Trim())
+                                {
+                                    attendeeExists = false;
+                                }
+                                else
+                                {
+                                    attendeeExists = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (attendeeExists == false || existingAttendees.Count == 0)
                         {
                             attendees.Add(attendee);
                         }
-
                     }
                 }
 
-                BaseModal baseModal = new BaseModal
+                if (attendees.Count > 0)
                 {
-                    Success = true,
-                    Title = "Success",
-                    Message = $"An email containing designated GINs and token allowances has been sent to all guests. Total guests: {attendees.Count}",                    
-                };
 
-                return baseModal;
+                    foreach (Attendee att in attendees)
+                    {
+                        att.GuestIdentificationNumber = GenerateGuestIdentificationNumber();
+                        database.Add(att);
+                        database.SaveChanges();
+                    }
+
+                    BaseModal baseModal = new BaseModal
+                    {
+                        Success = true,
+                        Title = "Success",
+                        Message = $"{attendees.Count} guests have been successfully added.",
+                    };
+
+                    return baseModal;
+                }
+                else
+                {
+                    BaseModal baseModal = new BaseModal
+                    {
+                        Success = false,
+                        Title = "Error",
+                        Message = $"No new guests have been added. Please check the data and try again.",
+                        Errors = new List<string>()
+                        {
+                             "The guest data already exist."
+                        }
+                    };
+
+                    return baseModal;
+                }
+
+                
             }
             catch(Exception exception) 
             {
@@ -235,5 +280,46 @@ namespace EventsManagementInterface.Data.Services
                 
             }
         }
+
+        public int GenerateGuestIdentificationNumber()
+        {
+            Random random = new Random();
+            int newGIN = random.Next(1000, 9999);
+            List<Attendee> attendees = database.Attendee.ToList();
+            List<int> existingGINS = new List<int>();
+            bool GINExists = true;
+
+            foreach (Attendee a in attendees)
+            {
+                existingGINS.Add(a.GuestIdentificationNumber);
+            }
+
+            if (existingGINS.Count != 0)
+            {
+                foreach (int existingGIN in existingGINS)
+                {
+                    if (existingGIN != newGIN)
+                    {
+                        GINExists = false;
+                    }
+                    else
+                    {
+                        GINExists = true;
+                        break;
+                    }
+
+                    if (GINExists) GenerateGuestIdentificationNumber();
+                }
+
+                return newGIN;
+            }
+            else
+            {
+                return newGIN;
+            }
+
+            
+        }
+
     }
 }
