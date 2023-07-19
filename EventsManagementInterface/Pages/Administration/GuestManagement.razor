@@ -180,36 +180,7 @@
 
     private async void UploadData(InputFileChangeEventArgs document)
     {
-        var attendee = new EventsManagementInterface.Data.Models.Attendee.Attendee();
-        List<EventsManagementInterface.Data.Models.Attendee.Attendee> attendees = new List<EventsManagementInterface.Data.Models.Attendee.Attendee>();
-        MemoryStream ms = new MemoryStream();
-        await document.File.OpenReadStream().CopyToAsync(ms);
-        var bytes = ms.ToArray();
-        string commaSeperatedValues = System.Text.Encoding.UTF8.GetString(bytes.ToArray()); // need to convert to string array
-
-        List<string> lines = commaSeperatedValues.Split("\n").ToList();
-
-        foreach (string line in lines)
-        {
-            string[] words = line.Split(',');
-
-            if (words != null)
-            {
-                attendee = new Data.Models.Attendee.Attendee
-                    {
-                        FirstName = words[0],
-                        LastName = words.Length > 1 ? words[1] : "",
-                        EmailAddress = words.Length > 2 ? words[2] : "",
-                        AlcoholicDrinkTokenAllowance = words.Length > 3 ? Int32.Parse(words[3]) : 2,
-                        NonAlcoholicDrinkTokenAllowance = words.Length > 4 ? Int32.Parse(words[4]) : 2,
-                        FoodTokenAllowance = words.Length > 5 ? Int32.Parse(words[5]) : 2
-                    };
-
-                    attendees.Add(attendee);
-            }
-        }
-    string t = "";
+        await administrationService.UploadAttendeeData(document);
     }
 
-    //await administrationService.UploadData(file);
 }

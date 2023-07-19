@@ -2,7 +2,9 @@
 using EventsManagementInterface.Data.Models.Administration;
 using EventsManagementInterface.Data.Models.Attendee;
 using EventsManagementInterface.Data.Models.Vendor;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace EventsManagementInterface.Data.Services
 {
@@ -46,7 +48,7 @@ namespace EventsManagementInterface.Data.Services
                 Utility.SendEmail(new Models.Email.Email
                 {
                     Recipient = attendee.EmailAddress,
-                    Subject = "Coloplast Fund Day Allowance",
+                    Subject = "Coloplast Fun Day Allowance",
                     HTMLMessage = 
                     $"Hi {attendee.FirstName}, " +
                     $"<br/><br/> " +
@@ -169,6 +171,69 @@ namespace EventsManagementInterface.Data.Services
             }
 
             return totalAvailableFoodTokens;
+        }
+
+        public async Task<BaseModal> UploadAttendeeData(InputFileChangeEventArgs document)
+        {
+            try
+            {
+                var attendee = new Attendee();
+                List<Attendee> attendees = new List<Attendee>();
+                MemoryStream ms = new MemoryStream();
+                await document.File.OpenReadStream().CopyToAsync(ms);
+                var bytes = ms.ToArray();
+                string commaSeperatedValues = System.Text.Encoding.UTF8.GetString(bytes.ToArray()); // need to convert to string array
+
+                List<string> lines = commaSeperatedValues.Split("\n").ToList();
+
+                foreach (string line in lines)
+                {
+                    string[] words = line.Split(',');
+
+                    if (words != null)
+                    {
+                        attendee = new Attendee
+                        {
+                            FirstName = words[0],
+                            LastName = words.Length > 1 ? words[1] : "",
+                            EmailAddress = words.Length > 2 ? words[2] : "",
+                            AlcoholicDrinkTokenAllowance = words.Length > 3 ? Int32.Parse(words[3]) : 2,
+                            NonAlcoholicDrinkTokenAllowance = words.Length > 4 ? Int32.Parse(words[4]) : 2,
+                            FoodTokenAllowance = words.Length > 5 ? Int32.Parse(words[5]) : 2
+                        };
+
+                        if (attendee.EmailAddress != null || attendee.EmailAddress != "")
+                        {
+                            attendees.Add(attendee);
+                        }
+
+                    }
+                }
+
+                BaseModal baseModal = new BaseModal
+                {
+                    Success = true,
+                    Title = "Success",
+                    Message = $"An email containing designated GINs and token allowances has been sent to all guests. Total guests: {attendees.Count}",                    
+                };
+
+                return baseModal;
+            }
+            catch(Exception exception) 
+            {
+                Utility.SendExceptionThrownEmail("UploadAttendeeData", exception);
+
+                BaseModal baseModal = new BaseModal
+                {
+                    Success = false,
+                    Title = "Error",
+                    Message = $"there has been an error uploading the data. An email has been sent to the system admin.",
+                    Errors = new List<string> { exception.Message }    
+                };
+
+                return baseModal;
+                
+            }
         }
     }
 }

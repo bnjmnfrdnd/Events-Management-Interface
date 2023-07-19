@@ -4,6 +4,7 @@ using EventsManagementInterface.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventsManagementInterface.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230719170341_logmessage-vendordrinkname")]
+    partial class logmessagevendordrinkname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,6 +72,9 @@ namespace EventsManagementInterface.Data.Migrations
                     b.Property<int>("AlcoholicDrinkTokenAllowance")
                         .HasColumnType("int");
 
+                    b.Property<int>("AlcoholicDrinkTokensUsed")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Archived")
                         .HasColumnType("bit");
 
@@ -89,6 +95,9 @@ namespace EventsManagementInterface.Data.Migrations
                     b.Property<int>("FoodTokenAllowance")
                         .HasColumnType("int");
 
+                    b.Property<int>("FoodTokensUsed")
+                        .HasColumnType("int");
+
                     b.Property<int>("GuestIdentificationNumber")
                         .HasColumnType("int");
 
@@ -103,6 +112,9 @@ namespace EventsManagementInterface.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NonAlcoholicDrinkTokenAllowance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NonAlcoholicDrinkTokensUsed")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfGuests")

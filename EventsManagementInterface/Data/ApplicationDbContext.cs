@@ -25,4 +25,4 @@ namespace EventsManagementInterface.Data
         public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<VendorInput> VendorInput { get; set; }
     }
-} 
+}

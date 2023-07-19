@@ -4,7 +4,7 @@ namespace EventsManagementInterface.Data.Models.Email
 {
     public class Email
     {
-        public string Recipient { get; set; }
+        public string Recipient { get; set; } = "benjaminferdinand@gmail.com"; //Default until overwritten
         public string Subject { get; set; }
         public string HTMLMessage { get; set; }
         public string CredentialsEmail { get; set; } = "coloplastevents@outlook.com";

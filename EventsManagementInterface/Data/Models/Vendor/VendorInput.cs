@@ -8,5 +8,7 @@
         public int NonAlcoholicDrinkToken { get; set; }
         public int FoodToken { get; set; }
         public int VendorId { get; set; }
+        public string DrinkName { get; set;}
+        public string DrinkPrice { get; set;}
     }
 }

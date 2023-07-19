@@ -7,6 +7,7 @@ namespace EventsManagementInterface.Data.Models.Administration
         public int GuestIdentificationNumber { get; set; }
         public LogType Type { get; set; }
         public string Summary { get; set; }
+        public string Message { get; set; }
         public int TokensUsed {  get; set; }
     }
 }

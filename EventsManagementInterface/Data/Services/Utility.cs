@@ -10,7 +10,7 @@ namespace EventsManagementInterface.Data.Services
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(email.CredentialsEmail);
-            mail.To.Add(email.Recipient/*"benjaminferdinand@gmail.com"*/);
+            mail.To.Add(email.Recipient);
             mail.Subject = email.Subject;
             mail.Body = email.HTMLMessage.ToString();
             mail.IsBodyHtml = true;
@@ -30,6 +30,40 @@ namespace EventsManagementInterface.Data.Services
             }
             catch (Exception ex)
             {
+                return false;
+            }
+        }
+
+        public static bool SendExceptionThrownEmail(string function, Exception exception)
+        {
+            Email email = new Email();
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(email.CredentialsEmail);
+            mail.To.Add(email.Recipient);
+            mail.Subject = $"An exception has been thrown - {function}.";
+            mail.Body = $"<b>Message:</b> {exception.Message} " +
+                    $"<br>" +
+                    $"<b>Inner Exception:</b> {exception.InnerException}" +
+                    $"<b>" +
+                    $"<b>Stack trace:</b> {exception.StackTrace}";
+            mail.IsBodyHtml = true;
+
+            SmtpClient server = new SmtpClient();
+            server.UseDefaultCredentials = false;
+            server.Credentials = new System.Net.NetworkCredential(email.CredentialsEmail, email.CredentialsPassword);
+            server.Port = 25;
+            server.EnableSsl = true;
+            server.Host = email.SMTPServer;
+            server.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            try
+            {
+                server.Send(mail);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                SendExceptionThrownEmail("SendExceptionThrownEmail", ex);
                 return false;
             }
         }

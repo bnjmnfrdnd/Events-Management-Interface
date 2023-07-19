@@ -8,6 +8,7 @@
         AlcoholicDrinkTokenUsed = 3,
         NonAlcoholicDrinkTokenUsed = 4,
         FoodTokenUsed = 5,
-        NoAllowanceRemaining = 6
+        NoAllowanceRemaining = 6,
+        ExceptionThrown = 10
     }    
 }
