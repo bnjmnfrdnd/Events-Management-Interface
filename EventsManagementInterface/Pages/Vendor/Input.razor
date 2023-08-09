@@ -34,7 +34,22 @@
                         <button class="vendor-input-button" type="button" @onclick="() => InsertGuestIdentificationNumber(3)">0</button>
                         <button class="vendor-input-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
                     </div>
+                    <div class="row justify-content-center mt-2">
+                        <button class="vendor-input-item" type="button" @onclick="() => ShowDrinkMenuModal()">Drink Menu</button>
+                    </div>
                 </div>
+
+           @*<div class="form-group col-lg-12 col-sm-12">
+                    <div class="row justify-content-center mt-2">
+                        <button class="vendor-input-item" type="button" @onclick="() => InsertGuestIdentificationNumber(1)">Gin & Tonic</button>
+                        <button class="vendor-input-item" type="button" @onclick="() => InsertGuestIdentificationNumber(2)">Beer</button>
+                        <button class="vendor-input-item" type="button" @onclick="() => InsertGuestIdentificationNumber(3)">Red Wine</button>
+                    </div>
+                </div>*@
+
+
+
+
                 <div class="form-group col-lg-12 col-sm-12">
                     <label for="vendorInputAlcoholicDrinks">Alcoholic Drink(s)</label>
                     <select class="form-control" id="vendorInputAlcoholicDrinks" @bind="vendorInput.AlcoholicDrinkToken">
@@ -112,10 +127,25 @@
     </ModalContent>
 </Modal>
 
+<Modal @ref="drinkMenuModal">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Drink Menu</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideDrinkMenuModal">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
 
 @code {
     private VendorInput vendorInput;
     private Modal modal;
+    private Modal drinkMenuModal;
     private BaseModal baseModal;
 
     private Task ShowModal()
@@ -127,6 +157,17 @@
     {
         return modal.Hide();
     }
+    
+    private Task ShowDrinkMenuModal()
+    {
+        return modal.Show();
+    }
+
+    private Task HideDrinkMenuModal()
+    {
+        return modal.Hide();
+    }
+
 
     protected override async Task OnInitializedAsync()
     {

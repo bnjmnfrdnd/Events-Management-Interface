@@ -164,3 +164,14 @@ input[type=text], input[type=date], input[type=number] {
     border: none;
     font-size: 3vh;
 }
+
+.vendor-input-item {
+    background-color: lightgray;
+    width: 10vh;
+    height: 10vh;
+    border-radius: 25px;
+    margin: 5px;
+    color: black;
+    border: none;
+    font-size: 2vh;
+}
