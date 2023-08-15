@@ -87,6 +87,8 @@ namespace EventsManagementInterface.Data.Services
             {
                 List<Attendee> recipients = new List<Attendee>();
                 BaseModal baseModal;
+                bool sendSuccess;
+                List<Attendee> failedInvitations = new List<Attendee>();
 
                 if (includePreviouslyEmailedGuests)
                 {
@@ -99,9 +101,9 @@ namespace EventsManagementInterface.Data.Services
 
                 foreach (Attendee recipient in recipients)
                 {
-                    await Utility.SendEmailAsync(new Models.Email.Email
+                    sendSuccess = await Utility.SendEmailAsync(new Models.Email.Email
                     {
-                        Recipient = recipient.EmailAddress,
+                        //Recipient = recipient.EmailAddress,
                         Subject = "Your Coloplast Fund Day Invitation",
                         HTMLMessage =
                         $"Hi {recipient.FirstName}, " +
@@ -127,14 +129,25 @@ namespace EventsManagementInterface.Data.Services
                         $"Coloplast Fun Day Team"
                     });
 
+                    if (!sendSuccess)
+                    {
+                        failedInvitations.Add(recipient);
+                    }
+                    else
+                    {
+                        recipient.GuestIdentificationNumberEmailSent = true;
+                        database.Update(recipient);
+                    }
 
                 }
+
+                database.SaveChanges();
 
                 baseModal = new BaseModal
                 {
                     Success = true,
                     Title = "Success",
-                    Message = "Guests have been successfully emailed their invitations!",
+                    Message = "Guests have been successfully emailed their invitations.",
                 };
 
                 return baseModal;
