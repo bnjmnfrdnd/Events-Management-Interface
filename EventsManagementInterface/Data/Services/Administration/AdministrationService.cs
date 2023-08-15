@@ -4,6 +4,7 @@ using EventsManagementInterface.Data.Models.Attendee;
 using EventsManagementInterface.Data.Models.Vendor;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Reflection.Metadata;
 
 namespace EventsManagementInterface.Data.Services
@@ -48,7 +49,7 @@ namespace EventsManagementInterface.Data.Services
                 {
                     Recipient = attendee.EmailAddress,
                     Subject = "Coloplast Fun Day Allowance",
-                    HTMLMessage = 
+                    HTMLMessage =
                     $"Hi {attendee.FirstName}, " +
                     $"<br/><br/> " +
                     $"Your remaining token allowance is: <ul>" +
@@ -77,6 +78,81 @@ namespace EventsManagementInterface.Data.Services
                 };
 
                 return baseModal;
+            }
+        }
+
+        public async Task<BaseModal> SendInvitationEmails(bool includePreviouslyEmailedGuests)
+        {
+            try
+            {
+                List<Attendee> recipients = new List<Attendee>();
+                BaseModal baseModal;
+
+                if (includePreviouslyEmailedGuests)
+                {
+                    recipients = database.Attendee.ToList();
+                }
+                else
+                {
+                    recipients = database.Attendee.Where(x => x.GuestIdentificationNumberEmailSent == false).ToList();
+                }
+
+                foreach (Attendee recipient in recipients)
+                {
+                    await Utility.SendEmailAsync(new Models.Email.Email
+                    {
+                        Recipient = recipient.EmailAddress,
+                        Subject = "Your Coloplast Fund Day Invitation",
+                        HTMLMessage =
+                        $"Hi {recipient.FirstName}, " +
+                        $"<br/><br/> " +
+                        $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}:" +
+                        $"<br/><br/>" +
+                        $"Please remember the following information; you'll need it for the fun day." +
+                        $"<br/><br/>" +
+                        $"You Guest Identification Number (GIN) is: <b>{recipient.GuestIdentificationNumber}</b>" +
+                        $"<br/><br/>" +
+                        $"You will have a token allowance for food and drink on the day. You're token allowance is:" +
+                        $"<ul>" +
+                        $"<li>Alcoholic Drink Tokens: <b>{recipient.AlcoholicDrinkTokenAllowance}</b></li>" +
+                        $"<li>Non-Alcoholic Drink Tokens: <b>{recipient.NonAlcoholicDrinkTokenAllowance}</b></li>" +
+                        $"<li>Food Tokens: <b>{recipient.FoodTokenAllowance}</b></li>" +
+                        $"</ul>" +
+                        $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!)." +
+                        $"<br/><br/>" +
+                        $"If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department." +
+                        $"<br/><br/>" +
+                        $"Kind regards," +
+                        $"<br>" +
+                        $"Coloplast Fun Day Team"
+                    });
+
+
+                }
+
+                baseModal = new BaseModal
+                {
+                    Success = true,
+                    Title = "Success",
+                    Message = "Guests have been successfully emailed their invitations!",
+                };
+
+                return baseModal;
+            }
+            catch (Exception exception)
+            {
+                Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
+
+                BaseModal baseModal = new BaseModal
+                {
+                    Success = false,
+                    Title = "Error",
+                    Message = $"There has been an error sending out the email invitations. An email has been sent to the system admin.",
+                    Errors = new List<string> { exception.Message }
+                };
+
+                return baseModal;
+
             }
         }
 
@@ -272,7 +348,7 @@ namespace EventsManagementInterface.Data.Services
                 {
                     Success = false,
                     Title = "Error",
-                    Message = $"there has been an error uploading the data. An email has been sent to the system admin.",
+                    Message = $"There has been an error uploading the data. An email has been sent to the system admin.",
                     Errors = new List<string> { exception.Message }    
                 };
 

@@ -36,6 +36,34 @@ namespace EventsManagementInterface.Data.Services
             }
         }
 
+        public static async Task<bool> SendEmailAsync(Email email)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(email.CredentialsEmail);
+            mail.To.Add(email.Recipient);
+            mail.Subject = email.Subject;
+            mail.Body = email.HTMLMessage.ToString();
+            mail.IsBodyHtml = true;
+
+            SmtpClient server = new SmtpClient();
+            server.UseDefaultCredentials = false;
+            server.Credentials = new System.Net.NetworkCredential(email.CredentialsEmail, email.CredentialsPassword);
+            server.Port = 25;
+            server.EnableSsl = true;
+            server.Host = email.SMTPServer;
+            server.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+            try
+            {
+                await server.SendMailAsync(mail);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public static bool SendExceptionThrownEmail(string function, Exception exception)
         {
             Email email = new Email();
