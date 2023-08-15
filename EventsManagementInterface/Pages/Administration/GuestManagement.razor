@@ -1,114 +1,59 @@
 ﻿@page "/administration/guestmanagement"
 @using EventsManagementInterface.Data.Models;
-@using EventsManagementInterface.Data.Models.Administration;
+@using EventsManagementInterface.Data.Models.Attendee;
 @using EventsManagementInterface.Data.Services
 @inject AdministrationService administrationService
 
 <PageTitle>Guest Management</PageTitle>
 <h1 class="mb-5">Guest Management</h1>
 <div class="row">
-    <div class="row justify-content-between col-lg-6">
-        <form @onsubmit="UpdateTokenAllowance" class="col-12 mb-2">
-            <div class="card-custom p-3 ">
-                <div class="card-body-custom">
-                    <h3>Update token allowance </h3>
-                    <p class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</p>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <label for="guestIdentificationNumber">Guest Identification Number</label>
-                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="alcoholicDrinkTokenAllowance">Alcoholic Drink Allowance</label>
-                            <select class="form-control" id="alcoholicDrinkTokenAllowance" @bind="guestManagement.AlcoholicDrinkTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
+    <div class="card-custom mb-3 p-3">
+            @*<input type="text" class="form-control" @bind="searchQuery" @bind:event="oninput" @onkeyup="SearchTable" placeholder="Search..."></input>*@
+            <div class="table-responsive">
+                <table class="table table-striped">
+
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th @onclick='() => FilterTable("GIN")' class="column-sorted"><span class="oi oi-arrow-top"></span> GIN</th>
+                            <th @onclick='() => FilterTable("EMAIL")' class="column-sorted"><span class="oi oi-arrow-top"></span> Email Address</th>
+                            <th @onclick='() => FilterTable("FIRSTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> First Name</th>
+                            <th @onclick='() => FilterTable("LASTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> Last Name</th>
+                            <th @onclick='() => FilterTable("INVITATION")' class="column-sorted"><span class="oi oi-arrow-top"></span> Invitation Email sent</th>
+                            <th @onclick='() => FilterTable("ALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Alcoholic Drink Tokens</th>
+                            <th @onclick='() => FilterTable("NONALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Non-Alcoholic Drink Tokens</th>
+                            <th @onclick='() => FilterTable("FOOD")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Food Tokens</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                <tbody>
+
+                    @foreach (var attendee in attendeeList)
+                    {
+                        <tr>
+                            <td>@(attendeeList.IndexOf(attendee) + 1)</td>
+                            <td>@attendee.GuestIdentificationNumber</td>
+                            <td>@attendee.EmailAddress</td>
+                            <td>@attendee.FirstName</td>
+                            <td>@attendee.LastName</td>
+                            <td>
+                                @if (attendee.GuestIdentificationNumberEmailSent)
                                 {
-                                    <option value="@i">@i</option>
+                                    <span class="oi oi-circle-check" style="color:green"></span>
                                 }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcoholic Drink Allowance</label>
-                            <select class="form-control" id="nonAlcoholicDrinkTokenAllowance" @bind="guestManagement.NonAlcoholicDrinkTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
+                                else
                                 {
-                                    <option value="@i">@i</option>
+                                    <span class="oi oi-circle-x" style="color: red"></span>
                                 }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="foodTokenAllowance">Food Token Allowance</label>
-                            <select class="form-control" id="foodTokenAllowance" @bind="guestManagement.FoodTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
-                                {
-                                    <option value="@i">@i</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="submit" class="btn btn-primary" value="Submit" />
-                </div>
-            </div>
-        </form>
-
-        <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
-                    <h3 class="mb-5">Check token allowance </h3>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <label for="guestIdentificationNumber">Guest Identification Number</label>
-                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
-                        </div>
-                    </div>
-
-                    <input type="submit" class="btn btn-primary" value="Submit" />
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="row justify-content-between col-lg-6">
-        <div class="col-12 mb-2">
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
-                    <h3>Upload Guest Data (.csv)</h3>
-                    <a href="/help/uploadingdata" target="_blank" class="mb-5">What should my csv data look like?</a>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </td>
+                            <td>@attendee.AlcoholicDrinkTokenAllowance</td>
+                            <td>@attendee.NonAlcoholicDrinkTokenAllowance</td>
+                            <td>@attendee.FoodTokenAllowance</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <form @onsubmit="SendInvitationEmails" class="col-12 mb-2">
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
-                    <h3>Send Invitation Email To Guests</h3>
-                    <p class="mb-5">Include previously emailed guests.</p>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <input type="checkbox" id="includeDuplicates" @bind-value="includePreviouslyEmailedGuests">
-                            <label for="includeDuplicates"> Include guest who have already received this email</label>
-                            <br>
-                            <br>
-                            <input type="submit" class="btn btn-primary" id="guestIdentificationNumber" value="Send">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 
@@ -162,8 +107,7 @@
 @code {
     private Modal modal;
     private BaseModal baseModal;
-    private EventsManagementInterface.Data.Models.Administration.GuestManagement guestManagement;
-    bool includePreviouslyEmailedGuests;
+    private List<Attendee> attendeeList = new List<Attendee>();
 
     private Task ShowModal()
     {
@@ -177,52 +121,41 @@
 
     protected override async Task OnInitializedAsync()
     {
-        guestManagement = new();
         baseModal = new BaseModal();
         baseModal.Errors = new List<string>();
         baseModal.TokensRemaining = new List<string>();
+        attendeeList = await administrationService.GetAttendees();
     }
 
-    public async Task UpdateTokenAllowance()
+    private void FilterTable(string filterByProperty)
     {
-        baseModal = await administrationService.UpdateTokenAllowance(guestManagement);
 
-        ShowModal();
-
-        if (baseModal.Success)
+        switch (filterByProperty)
         {
-            guestManagement = new();
+            case "GIN":
+                attendeeList = attendeeList.OrderBy(x => x.GuestIdentificationNumber).ToList();
+                break;
+            case "EMAIL":
+                attendeeList = attendeeList.OrderBy(x => x.EmailAddress).ToList();
+                break;
+            case "FIRSTNAME":
+                attendeeList = attendeeList.OrderBy(x => x.FirstName).ToList();
+                break;
+            case "LASTNAME":
+                attendeeList = attendeeList.OrderBy(x => x.LastName).ToList();
+                break;
+            case "INVITATION":
+                attendeeList = attendeeList.OrderBy(x => x.GuestIdentificationNumberEmailSent).ToList();
+                break;
+            case "ALCOHOLIC":
+                attendeeList = attendeeList.OrderByDescending(x => x.AlcoholicDrinkTokenAllowance).ToList();
+                break;
+            case "NONALCOHOLIC":
+                attendeeList = attendeeList.OrderByDescending(x => x.NonAlcoholicDrinkTokenAllowance).ToList();
+                break;
+            case "FOOD":
+                attendeeList = attendeeList.OrderByDescending(x => x.FoodTokenAllowance).ToList();
+                break;
         }
     }
-
-    public async Task CheckTokenAllowance()
-    {
-        baseModal = await administrationService.CheckTokenAllowance(guestManagement);
-
-        ShowModal();
-
-        if (baseModal.Success)
-        {
-            guestManagement = new();
-        }
-    }
-
-    public async void UploadData(InputFileChangeEventArgs document)
-    {
-        baseModal = await administrationService.UploadAttendeeData(document);
-        ShowModal();
-    }
-
-    public async Task SendInvitationEmails()
-    {
-        baseModal = await administrationService.SendInvitationEmails(includePreviouslyEmailedGuests);
-
-        ShowModal();
-
-        if (baseModal.Success)
-        {
-            guestManagement = new();
-        }
-    }
-
 }

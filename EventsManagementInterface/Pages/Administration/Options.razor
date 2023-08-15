@@ -1,0 +1,228 @@
+﻿@page "/administration/options"
+@using EventsManagementInterface.Data.Models;
+@using EventsManagementInterface.Data.Models.Administration;
+@using EventsManagementInterface.Data.Services
+@inject AdministrationService administrationService
+
+<PageTitle>Options</PageTitle>
+<h1 class="mb-5">Options</h1>
+<div class="row">
+    <div class="row justify-content-between col-lg-6">
+        <form @onsubmit="UpdateTokenAllowance" class="col-12 mb-2">
+            <div class="card-custom p-3 ">
+                <div class="card-body-custom">
+                    <h3>Update token allowance </h3>
+                    <p class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</p>
+                    <div class="row mb-3 mt-3">
+                        <div class="form-group">
+                            <label for="guestIdentificationNumber">Guest Identification Number</label>
+                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="alcoholicDrinkTokenAllowance">Alcoholic Drink Allowance</label>
+                            <select class="form-control" id="alcoholicDrinkTokenAllowance" @bind="guestManagement.AlcoholicDrinkTokenAllowance">
+                                <option value="" selected></option>
+                                @for (int i = 1; i < 11; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcoholic Drink Allowance</label>
+                            <select class="form-control" id="nonAlcoholicDrinkTokenAllowance" @bind="guestManagement.NonAlcoholicDrinkTokenAllowance">
+                                <option value="" selected></option>
+                                @for (int i = 1; i < 11; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="foodTokenAllowance">Food Token Allowance</label>
+                            <select class="form-control" id="foodTokenAllowance" @bind="guestManagement.FoodTokenAllowance">
+                                <option value="" selected></option>
+                                @for (int i = 1; i < 11; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+            </div>
+        </form>
+
+        <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
+            <div class="card-custom p-3">
+                <div class="card-body-custom">
+                    <h3 class="mb-5">Check token allowance </h3>
+                    <div class="row mb-3 mt-3">
+                        <div class="form-group">
+                            <label for="guestIdentificationNumber">Guest Identification Number</label>
+                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row justify-content-between col-lg-6">
+        <div class="col-12 mb-2">
+            <div class="card-custom p-3">
+                <div class="card-body-custom">
+                    <h3>Upload Guest Data (.csv)</h3>
+                    <a href="/help/uploadingdata" target="_blank" class="mb-5">What should my csv data look like?</a>
+                    <div class="row mb-3 mt-3">
+                        <div class="form-group">
+                            <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form @onsubmit="SendInvitationEmails" class="col-12 mb-2">
+            <div class="card-custom p-3">
+                <div class="card-body-custom">
+                    <h3>Send Invitation Email To Guests</h3>
+                    <p class="mb-5">Include previously emailed guests.</p>
+                    <div class="row mb-3 mt-3">
+                        <div class="form-group">
+                            <input type="checkbox" id="includeDuplicates" @bind-value="includePreviouslyEmailedGuests">
+                            <label for="includeDuplicates"> Include guest who have already received this email</label>
+                            <br>
+                            <br>
+                            <input type="submit" class="btn btn-primary" id="guestIdentificationNumber" value="Send">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<Modal @ref="modal">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>@baseModal.Title</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <Field>
+                <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>
+            </Field>
+            <Div Class="mb-2"></Div>
+            @if (baseModal.Success)
+            {
+                @if (baseModal.TokensRemaining != null && baseModal.TokensRemaining.Count != 0)
+                {
+                    <Field>
+                        <FieldLabel>Tokens Remaining:</FieldLabel>
+                        <UnorderedList>
+                            @foreach (string tokens in baseModal.TokensRemaining)
+                            {
+                                <UnorderedListItem>@tokens</UnorderedListItem>
+                            }
+                        </UnorderedList>
+                    </Field>
+                }
+            }
+            else
+            {
+                <Field>
+                    <UnorderedList>
+
+                        @foreach (string error in baseModal.Errors)
+                        {
+                            <UnorderedListItem>@error</UnorderedListItem>
+                        }
+                    </UnorderedList>
+                </Field>
+            }
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+
+@code {
+    private Modal modal;
+    private BaseModal baseModal;
+    private EventsManagementInterface.Data.Models.Administration.GuestManagement guestManagement;
+    bool includePreviouslyEmailedGuests;
+
+    private Task ShowModal()
+    {
+        return modal.Show();
+    }
+
+    private Task HideModal()
+    {
+        return modal.Hide();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        guestManagement = new();
+        baseModal = new BaseModal();
+        baseModal.Errors = new List<string>();
+        baseModal.TokensRemaining = new List<string>();
+    }
+
+    public async Task UpdateTokenAllowance()
+    {
+        baseModal = await administrationService.UpdateTokenAllowance(guestManagement);
+
+        ShowModal();
+
+        if (baseModal.Success)
+        {
+            guestManagement = new();
+        }
+    }
+
+    public async Task CheckTokenAllowance()
+    {
+        baseModal = await administrationService.CheckTokenAllowance(guestManagement);
+
+        ShowModal();
+
+        if (baseModal.Success)
+        {
+            guestManagement = new();
+        }
+    }
+
+    public async void UploadData(InputFileChangeEventArgs document)
+    {
+        baseModal = await administrationService.UploadAttendeeData(document);
+        ShowModal();
+    }
+
+    public async Task SendInvitationEmails()
+    {
+        baseModal = await administrationService.SendInvitationEmails(includePreviouslyEmailedGuests);
+
+        ShowModal();
+
+        if (baseModal.Success)
+        {
+            guestManagement = new();
+        }
+    }
+
+}
