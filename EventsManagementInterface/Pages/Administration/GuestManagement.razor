@@ -49,6 +49,7 @@
                             <td>@attendee.AlcoholicDrinkTokenAllowance</td>
                             <td>@attendee.NonAlcoholicDrinkTokenAllowance</td>
                             <td>@attendee.FoodTokenAllowance</td>
+                            <td><input type="button" @onclick="() => SendInvitation(attendee)" value="Send Invitation" class="btn btn-primary"> </td>
                         </tr>
                     }
                 </tbody>
@@ -157,5 +158,12 @@
                 attendeeList = attendeeList.OrderByDescending(x => x.FoodTokenAllowance).ToList();
                 break;
         }
+    }
+
+    private async Task SendInvitation(Attendee attendee)
+    {
+        baseModal = await administrationService.SendInvitationEmail(attendee);
+
+        ShowModal();
     }
 }

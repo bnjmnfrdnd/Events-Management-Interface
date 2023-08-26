@@ -227,7 +227,7 @@ namespace EventsManagementInterface.Data.Services
             List<Attendee> attendees = database.Attendee.Where(x => x.Archived == false).ToList();
             double totalAvailableAlcoholDrinkTokens = 0;
 
-            foreach(Attendee attendee in attendees)
+            foreach (Attendee attendee in attendees)
             {
                 totalAvailableAlcoholDrinkTokens += attendee.AlcoholicDrinkTokenAllowance;
             }
@@ -259,6 +259,26 @@ namespace EventsManagementInterface.Data.Services
             }
 
             return totalAvailableFoodTokens;
+        }
+
+        public async Task<double> GetTotalGuestsWithUnusedTokens()
+        {
+            List<Attendee> attendees = database.Attendee.Where(x => x.Archived == false).ToList();
+            List<Log> logs = database.Log.Where(x => x.Archived == false).ToList();
+            double totalAttendeesWithUsedTokens = 0;
+
+            foreach (Attendee attendee in attendees)
+            {
+                foreach(Log log in logs)
+                {
+                    if (log.GuestIdentificationNumber == attendee.GuestIdentificationNumber)
+                    {
+                        totalAttendeesWithUsedTokens++;
+                    }
+                }                
+            }
+
+            return attendees.Count - totalAttendeesWithUsedTokens;
         }
 
         public async Task<BaseModal> UploadAttendeeData(InputFileChangeEventArgs document)
@@ -351,9 +371,9 @@ namespace EventsManagementInterface.Data.Services
                     return baseModal;
                 }
 
-                
+
             }
-            catch(Exception exception) 
+            catch (Exception exception)
             {
                 Utility.SendExceptionThrownEmail("UploadAttendeeData", exception);
 
@@ -362,11 +382,81 @@ namespace EventsManagementInterface.Data.Services
                     Success = false,
                     Title = "Error",
                     Message = $"There has been an error uploading the data. An email has been sent to the system admin.",
-                    Errors = new List<string> { exception.Message }    
+                    Errors = new List<string> { exception.Message }
                 };
 
                 return baseModal;
-                
+
+            }
+        }
+
+        public async Task<BaseModal> SendInvitationEmail(Attendee attendee)
+        {
+            try
+            {
+                List<Attendee> recipients = new List<Attendee>();
+                BaseModal baseModal;
+                bool sendSuccess;
+
+                sendSuccess = await Utility.SendEmailAsync(new Models.Email.Email
+                {
+                    Recipient = attendee.EmailAddress,
+                    Subject = "Your Coloplast Fund Day Invitation",
+                    HTMLMessage =
+                    $"Hi {attendee.FirstName}, " +
+                    $"<br/><br/> " +
+                    $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}:" +
+                    $"<br/><br/>" +
+                    $"Please remember the following information; you'll need it for the fun day." +
+                    $"<br/><br/>" +
+                    $"You Guest Identification Number (GIN) is: <b>{attendee.GuestIdentificationNumber}</b>" +
+                    $"<br/><br/>" +
+                    $"You will have a token allowance for food and drink on the day. You're token allowance is:" +
+                    $"<ul>" +
+                    $"<li>Alcoholic Drink Tokens: <b>{attendee.AlcoholicDrinkTokenAllowance}</b></li>" +
+                    $"<li>Non-Alcoholic Drink Tokens: <b>{attendee.NonAlcoholicDrinkTokenAllowance}</b></li>" +
+                    $"<li>Food Tokens: <b>{attendee.FoodTokenAllowance}</b></li>" +
+                    $"</ul>" +
+                    $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!)." +
+                    $"<br/><br/>" +
+                    $"If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department." +
+                    $"<br/><br/>" +
+                    $"Kind regards," +
+                    $"<br>" +
+                    $"Coloplast Fun Day Team"
+                });
+
+                if (!sendSuccess)
+                {
+                    attendee.GuestIdentificationNumberEmailSent = true;
+                    database.Update(attendee);
+                }
+
+                database.SaveChanges();
+
+                baseModal = new BaseModal
+                {
+                    Success = true,
+                    Title = "Success",
+                    Message = "Email invitation successfully sent.",
+                };
+
+                return baseModal;
+            }
+            catch (Exception exception)
+            {
+                Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
+
+                BaseModal baseModal = new BaseModal
+                {
+                    Success = false,
+                    Title = "Error",
+                    Message = $"There has been an error sending out the email invitation. An email has been sent to the system admin.",
+                    Errors = new List<string> { exception.Message }
+                };
+
+                return baseModal;
+
             }
         }
 
@@ -407,7 +497,7 @@ namespace EventsManagementInterface.Data.Services
                 return newGIN;
             }
 
-            
+
         }
 
     }
