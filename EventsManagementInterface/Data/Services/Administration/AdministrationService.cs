@@ -1,4 +1,5 @@
-﻿using EventsManagementInterface.Data.Models;
+﻿using Azure.Core;
+using EventsManagementInterface.Data.Models;
 using EventsManagementInterface.Data.Models.Administration;
 using EventsManagementInterface.Data.Models.Attendee;
 using EventsManagementInterface.Data.Models.Vendor;
@@ -103,26 +104,26 @@ namespace EventsManagementInterface.Data.Services
                 {
                     sendSuccess = await Utility.SendEmailAsync(new Models.Email.Email
                     {
-                        //Recipient = recipient.EmailAddress,
-                        Subject = "Your Coloplast Fund Day Invitation",
+                        Recipient = recipient.EmailAddress,
+                        Subject = "Your Coloplast Fun Day Invitation",
                         HTMLMessage =
                         $"Hi {recipient.FirstName}, " +
                         $"<br/><br/> " +
-                        $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}:" +
+                        $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}." +
                         $"<br/><br/>" +
-                        $"Please remember the following information; you'll need it for the fun day." +
+                        $"As per your recent email, please find below information you will need on the day, to obtain your food & drinks on the day." +
                         $"<br/><br/>" +
-                        $"You Guest Identification Number (GIN) is: <b>{recipient.GuestIdentificationNumber}</b>" +
+                        $"Your Guest Identification Number (GIN) is: <b>{recipient.GuestIdentificationNumber}</b>" +
                         $"<br/><br/>" +
-                        $"You will have a token allowance for food and drink on the day. You're token allowance is:" +
+                        $"Your token allowance is:" +
                         $"<ul>" +
                         $"<li>Alcoholic Drink Tokens: <b>{recipient.AlcoholicDrinkTokenAllowance}</b></li>" +
                         $"<li>Non-Alcoholic Drink Tokens: <b>{recipient.NonAlcoholicDrinkTokenAllowance}</b></li>" +
                         $"<li>Food Tokens: <b>{recipient.FoodTokenAllowance}</b></li>" +
                         $"</ul>" +
-                        $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!)." +
+                        $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly." +
                         $"<br/><br/>" +
-                        $"If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department." +
+                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
                         $"<br/><br/>" +
                         $"Kind regards," +
                         $"<br>" +
@@ -401,29 +402,29 @@ namespace EventsManagementInterface.Data.Services
                 sendSuccess = await Utility.SendEmailAsync(new Models.Email.Email
                 {
                     Recipient = attendee.EmailAddress,
-                    Subject = "Your Coloplast Fund Day Invitation",
+                    Subject = "Your Coloplast Fun Day Invitation",
                     HTMLMessage =
-                    $"Hi {attendee.FirstName}, " +
-                    $"<br/><br/> " +
-                    $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}:" +
-                    $"<br/><br/>" +
-                    $"Please remember the following information; you'll need it for the fun day." +
-                    $"<br/><br/>" +
-                    $"You Guest Identification Number (GIN) is: <b>{attendee.GuestIdentificationNumber}</b>" +
-                    $"<br/><br/>" +
-                    $"You will have a token allowance for food and drink on the day. You're token allowance is:" +
-                    $"<ul>" +
-                    $"<li>Alcoholic Drink Tokens: <b>{attendee.AlcoholicDrinkTokenAllowance}</b></li>" +
-                    $"<li>Non-Alcoholic Drink Tokens: <b>{attendee.NonAlcoholicDrinkTokenAllowance}</b></li>" +
-                    $"<li>Food Tokens: <b>{attendee.FoodTokenAllowance}</b></li>" +
-                    $"</ul>" +
-                    $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!)." +
-                    $"<br/><br/>" +
-                    $"If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department." +
-                    $"<br/><br/>" +
-                    $"Kind regards," +
-                    $"<br>" +
-                    $"Coloplast Fun Day Team"
+                        $"Hi {attendee.FirstName}, " +
+                        $"<br/><br/> " +
+                        $"Thank you for registering your attendance for the Coloplast Fun Day {DateTime.Now.Year}." +
+                        $"<br/><br/>" +
+                        $"As per your recent email, please find below information you will need on the day, to obtain your food & drinks on the day." +
+                        $"<br/><br/>" +
+                        $"Your Guest Identification Number (GIN) is: <b>{attendee.GuestIdentificationNumber}</b>" +
+                        $"<br/><br/>" +
+                        $"Your token allowance is:" +
+                        $"<ul>" +
+                        $"<li>Alcoholic Drink Tokens: <b>{attendee.AlcoholicDrinkTokenAllowance}</b></li>" +
+                        $"<li>Non-Alcoholic Drink Tokens: <b>{attendee.NonAlcoholicDrinkTokenAllowance}</b></li>" +
+                        $"<li>Food Tokens: <b>{attendee.FoodTokenAllowance}</b></li>" +
+                        $"</ul>" +
+                        $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly." +
+                        $"<br/><br/>" +
+                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
+                        $"<br/><br/>" +
+                        $"Kind regards," +
+                        $"<br>" +
+                        $"Coloplast Fun Day Team"
                 });
 
                 if (!sendSuccess)
