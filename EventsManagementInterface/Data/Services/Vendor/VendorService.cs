@@ -3,19 +3,23 @@ using EventsManagementInterface.Data.Models.Vendor;
 using EventsManagementInterface.Data.Models;
 using System.Globalization;
 using EventsManagementInterface.Data.Enums;
+using System;
+using EventsManagementInterface.Data.Models.Administration;
 
 namespace EventsManagementInterface.Data.Services
 {
     public class VendorService
     {
         private LogService logService;
+        private AdministrationService administrationService;
         private ApplicationDbContext database;
         TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-        public VendorService(ApplicationDbContext database, LogService logService)
+        public VendorService(ApplicationDbContext database, LogService logService, AdministrationService administrationService)
         {
             this.database = database;
             this.logService = logService;
+            this.administrationService = administrationService;
         }
 
         public async Task<BaseModal> SubmitVendorInput(VendorInput vendorInput)
@@ -136,9 +140,10 @@ namespace EventsManagementInterface.Data.Services
                 {
                     logService.CreateLog(
                         LogType.AlcoholicDrinkTokenUsed,
-                        "Token used",
+                        "REDEEMED TOKENS",
                         vendorInput.AlcoholicDrinkToken,
-                        vendorInput.GuestIdentificationNumber
+                        vendorInput.GuestIdentificationNumber,
+                        "ALCOHOL"
                     );
                 }
 
@@ -146,9 +151,10 @@ namespace EventsManagementInterface.Data.Services
                 {
                     logService.CreateLog(
                         LogType.NonAlcoholicDrinkTokenUsed,
-                        "Token used",
+                        "REDEEMED TOKENS",
                         vendorInput.NonAlcoholicDrinkToken,
-                        vendorInput.GuestIdentificationNumber
+                        vendorInput.GuestIdentificationNumber,
+                        "NON-ALCOHOL"
                     );
                 }
 
@@ -156,9 +162,10 @@ namespace EventsManagementInterface.Data.Services
                 {
                     logService.CreateLog(
                         LogType.FoodTokenUsed,
-                        "Token used",
+                        "REDEEMED TOKENS",
                         vendorInput.FoodToken,
-                        vendorInput.GuestIdentificationNumber
+                        vendorInput.GuestIdentificationNumber,
+                        "FOOD"
                     );
                 }
 
@@ -166,6 +173,10 @@ namespace EventsManagementInterface.Data.Services
             }
             catch (Exception ex)
             {
+                Utility.SendExceptionThrownEmail("SubmitVendorInput", ex);
+
+                logService.CreateExceptionThrownLog("SubmitVendorInput", ex);
+
                 BaseModal vendorInputModal = new BaseModal
                 {
                     GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
@@ -184,6 +195,11 @@ namespace EventsManagementInterface.Data.Services
 
                 return vendorInputModal;
             }
+        }
+
+        public async Task<BaseModal>CheckTokenAllowance(VendorInput vendorInput)
+        {
+            return await administrationService.QuickCheckTokenAllowance(vendorInput.GuestIdentificationNumber);
         }
     }
 } 

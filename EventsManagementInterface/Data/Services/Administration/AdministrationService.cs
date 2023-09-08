@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using EventsManagementInterface.Data.Enums;
 using EventsManagementInterface.Data.Models;
 using EventsManagementInterface.Data.Models.Administration;
 using EventsManagementInterface.Data.Models.Attendee;
@@ -14,16 +15,55 @@ namespace EventsManagementInterface.Data.Services
     {
         private ApplicationDbContext database;
         private Utility utility;
+        private LogService logService;
 
-        public AdministrationService(ApplicationDbContext database, Utility utility)
+        public AdministrationService(ApplicationDbContext database, Utility utility, LogService logService)
         {
             this.database = database;
             this.utility = utility;
+            this.logService = logService;
         }
 
         public async Task<List<Attendee>> GetAttendees()
         {
             return await database.Attendee.ToListAsync();
+        }
+
+        public async Task<BaseModal> QuickCheckTokenAllowance(int GIN)
+        {
+            Attendee attendee = database.Attendee.SingleOrDefault(x => x.GuestIdentificationNumber == GIN);
+            BaseModal baseModal;
+
+            if (attendee != null)
+            {
+                baseModal = new BaseModal
+                {
+                    Success = true,
+                    Title = "Success",
+                    Message = $"Please see token allowance for {attendee.FirstName} ({GIN}) below.",
+                    TokensRemaining = new List<string>
+                    {
+                        $"Alcoholic drink tokens: {attendee.AlcoholicDrinkTokenAllowance}",
+                        $"Non-Alcoholic drink tokens: {attendee.NonAlcoholicDrinkTokenAllowance}",
+                        $"Food tokens: {attendee.FoodTokenAllowance}"
+                    }
+                };
+            }
+            else
+            {
+                baseModal = new BaseModal
+                {
+                    Success = false,
+                    Title = "Error",
+                    Message = $"Please see token allowance for ({GIN}) below.",
+                    Errors = new List<string>()
+                    {
+                        "The GIN number does not exist."
+                    },
+                    
+                };
+            }
+            return baseModal;
         }
 
         public async Task<BaseModal> CheckTokenAllowance(GuestManagement guestManagement)
@@ -156,6 +196,7 @@ namespace EventsManagementInterface.Data.Services
             catch (Exception exception)
             {
                 Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
+                logService.CreateExceptionThrownLog("SendAllGuestsInvites", exception);
 
                 BaseModal baseModal = new BaseModal
                 {
@@ -270,13 +311,13 @@ namespace EventsManagementInterface.Data.Services
 
             foreach (Attendee attendee in attendees)
             {
-                foreach(Log log in logs)
+                foreach (Log log in logs)
                 {
                     if (log.GuestIdentificationNumber == attendee.GuestIdentificationNumber)
                     {
                         totalAttendeesWithUsedTokens++;
                     }
-                }                
+                }
             }
 
             return attendees.Count - totalAttendeesWithUsedTokens;
@@ -339,6 +380,13 @@ namespace EventsManagementInterface.Data.Services
 
                 if (attendees.Count > 0)
                 {
+                    logService.CreateLog(
+                        LogType.UploadAttendees,
+                        $"{attendees.Count}",
+                        0,
+                        0,
+                        "ATTENDEES UPLOADED"
+                    );
 
                     foreach (Attendee att in attendees)
                     {
@@ -377,6 +425,7 @@ namespace EventsManagementInterface.Data.Services
             catch (Exception exception)
             {
                 Utility.SendExceptionThrownEmail("UploadAttendeeData", exception);
+                logService.CreateExceptionThrownLog("UploadAttendeeData", exception);
 
                 BaseModal baseModal = new BaseModal
                 {
@@ -447,6 +496,7 @@ namespace EventsManagementInterface.Data.Services
             catch (Exception exception)
             {
                 Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
+                logService.CreateExceptionThrownLog("SendAllGuestsInvites", exception);
 
                 BaseModal baseModal = new BaseModal
                 {

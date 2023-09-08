@@ -32,7 +32,10 @@
                     <div class="row justify-content-center mt-2">
                         <button class="vendor-input-button" type="button" style="background-color: darkred !important;" @onclick="() => ClearInput()"><span class="oi oi-x" aria-hidden="true"></span></button>
                         <button class="vendor-input-button" type="button" @onclick="() => InsertGuestIdentificationNumber(3)">0</button>
-                        <button class="vendor-input-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
+                        <button class="vendor-input-button" type="button" style="background-color: orange !important;" @onclick="() => CheckTokenAllowance()"><span class="oi oi-magnifying-glass" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="row justify-content-center mt-2">                        
+                        <button class="vendor-input-submit-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
                     </div>
                 </div>
 
@@ -128,7 +131,7 @@
     {
         return modal.Hide();
     }
-    
+
     private Task ShowDrinkMenuModal()
     {
         return modal.Show();
@@ -177,7 +180,6 @@
         {
             vendorInput.GuestIdentificationNumber = int.Parse(vendorInput.GuestIdentificationNumber.ToString() + input.ToString());
         }
-
     }
 
     private void ClearInput()
@@ -188,6 +190,10 @@
         vendorInput.FoodToken = 0;
     }
 
-    
+    private async Task CheckTokenAllowance()
+    {
+        baseModal = await vendorService.CheckTokenAllowance(vendorInput);
+        ShowModal();
+    }    
 }
 

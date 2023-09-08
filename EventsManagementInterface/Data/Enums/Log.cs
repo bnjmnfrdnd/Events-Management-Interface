@@ -9,6 +9,7 @@
         NonAlcoholicDrinkTokenUsed = 4,
         FoodTokenUsed = 5,
         NoAllowanceRemaining = 6,
+        UploadAttendees = 7,
         ExceptionThrown = 10
     }    
 }

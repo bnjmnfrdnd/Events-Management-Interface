@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.Mail;
 using Blazorise;
 using EventsManagementInterface.Data.Models.Attendee;
@@ -30,7 +31,7 @@ namespace EventsManagementInterface.Data.Services
                 server.Send(mail);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return false;
             }
@@ -58,7 +59,7 @@ namespace EventsManagementInterface.Data.Services
                 await server.SendMailAsync(mail);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
                 return false;
             }

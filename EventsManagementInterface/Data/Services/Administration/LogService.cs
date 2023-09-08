@@ -12,7 +12,7 @@ namespace EventsManagementInterface.Data.Services
             this.database = database;
         }
 
-        public void CreateLog(LogType type, string summary, int tokensUsed, int guestIdentificationNumber)
+        public void CreateLog(LogType type, string summary, int tokensUsed, int guestIdentificationNumber, string message = null)
         {
             Log log = new Log()
             {
@@ -22,6 +22,7 @@ namespace EventsManagementInterface.Data.Services
                 GuestIdentificationNumber = guestIdentificationNumber,
                 CreatedDateTime = DateTime.Now,
                 Archived = false,
+                Message = message ?? ""
             };
 
             database.Add(log);
@@ -33,9 +34,10 @@ namespace EventsManagementInterface.Data.Services
             Log log = new Log()
             {
                 Type = LogType.ExceptionThrown,
-                Summary = $"An exception has been thrown - {function}.",
+                Summary = $"EXCEPTION",
                 CreatedDateTime = DateTime.Now,
                 Archived = false,
+                Message = $"{function}: {exception.Message}",
             };
 
             database.Add(log);
