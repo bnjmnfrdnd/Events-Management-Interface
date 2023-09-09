@@ -2,9 +2,11 @@
 @using EventsManagementInterface.Data.Models
 @using EventsManagementInterface.Data.Models.Vendor
 @using EventsManagementInterface.Data.Services
+@using EventsManagementInterface.Data.Enums
 @inject VendorService vendorService
 
 <PageTitle>Vendor Input</PageTitle>
+<input type="button" value="Add Guest" class="btn btn-primary col-2" @onclick="() => ShowMenuModal()">
 <form @onsubmit="SubmitVendorInput">
     <div class="card-custom p-3">
         <div class="card-body-custom">
@@ -116,11 +118,92 @@
     </ModalContent>
 </Modal>
 
+<Modal @ref="menuModal">
+    <ModalContent Size="ModalSize.Large">
+        <ModalHeader>
+            <ModalTitle>Menu</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <div class="mt-2 text-center">
+                <h5>Beers - Draught</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MADRI_LAGER_PINT, 5.00)">Madri Lager (Pint)</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.NECK_OIL_IPA_PINT, 5.00)">Neck Oil IPA (Pint)</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MADRI_LAGER_HALF_PINT, 2.50)">Madri Lager (Half-pint)</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.NECK_OIL_IPA_HALF_PINT, 2.50)">Neck Oil IPA (Half-pint)</button>
+            </div>
+
+            <div class="mt-3 text-center">
+                <h5>Beers & Ciders - Bottles</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.HEINEKEN_ZERO, 3.50)">Heineken Zero</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.ASPALLS_CIDER, 5.00)">Aspalls Cider</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.KOPPARBERG_MIXED_FRUITS, 5.00)">Kopparberg - Mixed Fruits</button>
+            </div>
+
+            <div class="mt-3 text-center">
+                <h5>Spirits & Mixers</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.SMIRNOFF_RED_VODKA, 5.00)">Smirnoff Red Vodka</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.GORDONS_GIN, 5.00)">Gordons Gin</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.BACARDI, 5.00)">Bacardi</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.JACK_DANIELS, 5.00)">Jack Daniels</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MORGANS_SPICED_RUM, 5.00)">Morgan's Spiced Rum'</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MALIBU, 5.00)">Malibu</button>
+            </div>
+
+            <div class="mt-3 text-center">
+                <h5>Specialist Drinks</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.GORDONS_PINK_GIN, 5.50)">Gordons Pink Gin</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WHITLEY_NEILL_SELECTION, 5.50)">Whitley Neill Selection</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.PIMMS_AND_LEMONADE, 4.50)">Pimms & Lemonade</button>
+            </div>
+
+            <div class="mt-3 text-center">
+                <h5>Soft Drinks</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.LEMONADE, 1.00)">Lemonade</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.COKE, 1.00)">Coke</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.FRUIT_SHOOT, 1.00)">Fruit Shoot</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.ORANGE, 1.00)">Orange</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WATER, 1.00)">Water</button>
+            </div>
+
+            <div class="mt-3 text-center">
+                <h5>Wines & Fizz</h5>
+            </div>
+            <div class="row justify-content-center mt-2">
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.PROSECCO, 4.50)">Prosecco</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.RED_WINE, 4.50)">Red Wine</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WHITE_WINE, 4.50)">White Wine</button>
+            </div>
+        </ModalBody>
+        <ModalFooter>
+            @*<Button Color="Color.Secondary" Clicked="@HideAttendeeModal">Close</Button>
+            <input type="button" class="btn btn-primary" value="Save" @onclick="() => SaveAttendee(attendee)">*@
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
 @code {
     private VendorInput vendorInput;
     private Modal modal;
-    private Modal drinkMenuModal;
+    private Modal menuModal;
     private BaseModal baseModal;
+    private List<Order> orders = new List<Order>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        vendorInput = new VendorInput();
+        baseModal = new BaseModal();
+        baseModal.Errors = new List<string>();
+    }
 
     private Task ShowModal()
     {
@@ -132,23 +215,21 @@
         return modal.Hide();
     }
 
-    private Task ShowDrinkMenuModal()
+    private Task ShowMenuModal()
     {
-        return modal.Show();
+        return menuModal.Show();
     }
 
-    private Task HideDrinkMenuModal()
+    private Task HideMenuModal()
     {
-        return modal.Hide();
+        return menuModal.Hide();
     }
 
-
-    protected override async Task OnInitializedAsync()
+    private async Task CheckTokenAllowance()
     {
-        vendorInput = new VendorInput();
-        baseModal = new BaseModal();
-        baseModal.Errors = new List<string>();
-    }
+        baseModal = await vendorService.CheckTokenAllowance(vendorInput);
+        ShowModal();
+    }    
 
     public async Task SubmitVendorInput()
     {
@@ -190,10 +271,16 @@
         vendorInput.FoodToken = 0;
     }
 
-    private async Task CheckTokenAllowance()
+    private Task AddToOrder(Drink drink, double price)
     {
-        baseModal = await vendorService.CheckTokenAllowance(vendorInput);
-        ShowModal();
-    }    
+        Order order = new Order
+            {
+                Name = drink.ToString(),
+                Price = price,
+                GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
+            };
+
+            return null;
+    }
 }
 

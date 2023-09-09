@@ -1,9 +1,11 @@
 ﻿namespace EventsManagementInterface.Data.Models.Vendor
 {
-    public class Order
+    public class Order : BaseModel
     {
-        public int id { get; set; }
-        public DateTime OrderDate { get; set; }
-        public bool Archived { get; set; }
+        public int GuestIdentificationNumber { get; set; }  
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public double Size { get; set; }
     }
 }

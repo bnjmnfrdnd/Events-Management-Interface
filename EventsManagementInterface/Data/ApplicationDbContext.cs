@@ -24,5 +24,6 @@ namespace EventsManagementInterface.Data
         public virtual DbSet<Attendee> Attendee { get; set; }
         public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<VendorInput> VendorInput { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
     }
 }
