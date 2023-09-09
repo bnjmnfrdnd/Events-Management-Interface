@@ -60,7 +60,7 @@ namespace EventsManagementInterface.Data.Services
                     {
                         "The GIN number does not exist."
                     },
-                    
+
                 };
             }
             return baseModal;
@@ -446,7 +446,7 @@ namespace EventsManagementInterface.Data.Services
             {
                 List<Attendee> recipients = new List<Attendee>();
                 BaseModal baseModal;
-                bool sendSuccess;
+                bool sendSuccess = false;
 
                 sendSuccess = await Utility.SendEmailAsync(new Models.Email.Email
                 {
@@ -476,7 +476,7 @@ namespace EventsManagementInterface.Data.Services
                         $"Coloplast Fun Day Team"
                 });
 
-                if (!sendSuccess)
+                if (sendSuccess)
                 {
                     attendee.GuestIdentificationNumberEmailSent = true;
                     database.Update(attendee);
@@ -549,6 +549,71 @@ namespace EventsManagementInterface.Data.Services
             }
 
 
+        }
+
+        public async Task<BaseModal> SaveAttendee(Attendee attendee, bool sendInvitationEmail)
+        {
+            try
+            {
+
+                BaseModal baseModal;
+                string message = "";
+                Attendee att = database.Attendee.SingleOrDefault(x => x.GuestIdentificationNumber == attendee.GuestIdentificationNumber);
+
+                if (att == null)
+                {
+                    attendee.GuestIdentificationNumber = GenerateGuestIdentificationNumber();
+                    database.Add(attendee);
+                }
+                else
+                {
+                    database.Update(att);
+                }
+
+                database.SaveChanges();
+
+                if (sendInvitationEmail)
+                {
+                    message = $"Guest has been successfully saved. An email invitation has been sent to {attendee.EmailAddress}";
+                    await SendInvitationEmail(attendee);
+                }
+                else
+                {
+                    message = "Guest has been successfully saved.";
+                }
+
+                logService.CreateLog(
+                        LogType.SaveAttendee,
+                        "Manual Save",
+                        0,
+                        attendee.GuestIdentificationNumber,
+                        "ATTENDEE SAVED"
+                    );
+
+                baseModal = new BaseModal
+                {
+                    Success = true,
+                    Title = "Success",
+                    Message = message,
+                };
+
+                return baseModal;
+            }
+            catch (Exception exception)
+            {
+                Utility.SendExceptionThrownEmail("SaveAttendee", exception);
+                logService.CreateExceptionThrownLog("SaveAttendee", exception);
+
+                BaseModal baseModal = new BaseModal
+                {
+                    Success = false,
+                    Title = "Error",
+                    Message = $"There has been an error saving the attendee. An email has been sent to the system admin.",
+                    Errors = new List<string> { exception.Message }
+                };
+
+                return baseModal;
+            }
         }
 
     }

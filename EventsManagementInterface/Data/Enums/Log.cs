@@ -10,6 +10,7 @@
         FoodTokenUsed = 5,
         NoAllowanceRemaining = 6,
         UploadAttendees = 7,
+        SaveAttendee = 8,
         ExceptionThrown = 10
     }    
 }

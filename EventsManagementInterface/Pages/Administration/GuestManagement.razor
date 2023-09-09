@@ -8,24 +8,26 @@
 <h1 class="mb-5">Guest Management</h1>
 <div class="row">
     <div class="card-custom mb-3 p-3">
-            @*<input type="text" class="form-control" @bind="searchQuery" @bind:event="oninput" @onkeyup="SearchTable" placeholder="Search..."></input>*@
-            <div class="table-responsive">
-                <table class="table table-striped">
+        @*<input type="text" class="form-control" @bind="searchQuery" @bind:event="oninput" @onkeyup="SearchTable" placeholder="Search..."></input>*@
+        <input type="button" value="Add Guest" class="btn btn-primary col-2" @onclick="() => ShowAttendeeModal()">
+        <div class="table-responsive">
+            <table class="table table-striped">
 
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th @onclick='() => FilterTable("GIN")' class="column-sorted"><span class="oi oi-arrow-top"></span> GIN</th>
-                            <th @onclick='() => FilterTable("EMAIL")' class="column-sorted"><span class="oi oi-arrow-top"></span> Email Address</th>
-                            <th @onclick='() => FilterTable("FIRSTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> First Name</th>
-                            <th @onclick='() => FilterTable("LASTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> Last Name</th>
-                            <th @onclick='() => FilterTable("INVITATION")' class="column-sorted"><span class="oi oi-arrow-top"></span> Invitation Email sent</th>
-                            <th @onclick='() => FilterTable("ALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Alcoholic Drink Tokens</th>
-                            <th @onclick='() => FilterTable("NONALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Non-Alcoholic Drink Tokens</th>
-                            <th @onclick='() => FilterTable("FOOD")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Food Tokens</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th @onclick='() => FilterTable("GIN")' class="column-sorted"><span class="oi oi-arrow-top"></span> GIN</th>
+                        <th @onclick='() => FilterTable("EMAIL")' class="column-sorted"><span class="oi oi-arrow-top"></span> Email Address</th>
+                        <th @onclick='() => FilterTable("FIRSTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> First Name</th>
+                        <th @onclick='() => FilterTable("LASTNAME")' class="column-sorted"><span class="oi oi-arrow-top"></span> Last Name</th>
+                        <th @onclick='() => FilterTable("INVITATION")' class="column-sorted"><span class="oi oi-arrow-top"></span> Invitation Email sent</th>
+                        <th @onclick='() => FilterTable("ALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Alcoholic Drink Tokens</th>
+                        <th @onclick='() => FilterTable("NONALCOHOLIC")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Non-Alcoholic Drink Tokens</th>
+                        <th @onclick='() => FilterTable("FOOD")' class="column-sorted"><span class="oi oi-arrow-bottom"></span> Food Tokens</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
                 <tbody>
 
                     @foreach (var attendee in attendeeList)
@@ -49,6 +51,7 @@
                             <td>@attendee.AlcoholicDrinkTokenAllowance</td>
                             <td>@attendee.NonAlcoholicDrinkTokenAllowance</td>
                             <td>@attendee.FoodTokenAllowance</td>
+                            <td><input type="button" @onclick="() => ShowAttendeeModal(attendee)" value="Edit" class="btn btn-secondary"> </td>
                             <td><input type="button" @onclick="() => SendInvitation(attendee)" value="Send Invitation" class="btn btn-primary"> </td>
                         </tr>
                     }
@@ -104,11 +107,58 @@
     </ModalContent>
 </Modal>
 
+<Modal @ref="attendeeModal">
+    <ModalContent Size="ModalSize.Default">
+        <ModalHeader>
+            <ModalTitle>Guest</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            <form>
+                <div class="form-group col-12 mb-2">
+                    <label for="attendeeFirstName">First Name</label>
+                    <input type="text" @bind="attendee.FirstName" class="form-control" name="attendeeFirstName" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <label for="attendeeLastName">Last Name</label>
+                    <input type="text" @bind="attendee.LastName" class="form-control" name="attendeeLastName" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <label for="attendeeEmailAddress">Email Address</label>
+                    <input type="text" @bind="attendee.EmailAddress" class="form-control" name="attendeeEmailAddress" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <label for="alcoholicDrinkTokenAllowance">Alcohol Drink Token Allowance</label>
+                    <input type="text" @bind="attendee.AlcoholicDrinkTokenAllowance" class="form-control" name="alcoholicDrinkTokenAllowance" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcohol Drink Token Allowance</label>
+                    <input type="text" @bind="attendee.NonAlcoholicDrinkTokenAllowance" class="form-control" name="nonAlcoholicDrinkTokenAllowance" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <label for="foodTokenAllowance">Food Token Allowance</label>
+                    <input type="text" @bind="attendee.FoodTokenAllowance" class="form-control" name="foodTokenAllowance" />
+                </div>
+                <div class="form-group col-12 mb-2">
+                    <input type="checkbox" id="sendInvitationEmail" @bind-value="sendInvitationEmail">
+                    <label for="sendInvitationEmail">Send Invitation Email</label>
+                </div>
+            </form>
+
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Secondary" Clicked="@HideAttendeeModal">Close</Button>
+            <input type="button" class="btn btn-primary" value="Save" @onclick="() => SaveAttendee(attendee)">
+        </ModalFooter>
+    </ModalContent>
+</Modal>
 
 @code {
     private Modal modal;
+    private Modal attendeeModal;
     private BaseModal baseModal;
+    private Attendee attendee = new Attendee();
     private List<Attendee> attendeeList = new List<Attendee>();
+    private bool sendInvitationEmail = false;
 
     private Task ShowModal()
     {
@@ -118,6 +168,43 @@
     private Task HideModal()
     {
         return modal.Hide();
+    }
+
+    private Task ShowAttendeeModal(Attendee guest = null)
+    {
+        if (guest == null)
+        {
+            attendee = new Attendee();
+        }
+        else
+        {
+            attendee = guest;
+        }
+
+        return attendeeModal.Show();
+    }
+
+    private Task HideAttendeeModal()
+    {
+        attendee = new Attendee();
+        return attendeeModal.Hide();
+    }
+
+    private async Task SaveAttendee(Attendee attendee)
+    {
+        baseModal = await administrationService.SaveAttendee(attendee, sendInvitationEmail);
+
+        if(baseModal.Success)
+        {
+            HideAttendeeModal();
+            ShowModal();
+        }
+        else
+        {
+            ShowModal();
+        }
+
+        attendeeList = await administrationService.GetAttendees();
     }
 
     protected override async Task OnInitializedAsync()
@@ -163,7 +250,6 @@
     private async Task SendInvitation(Attendee attendee)
     {
         baseModal = await administrationService.SendInvitationEmail(attendee);
-
         ShowModal();
     }
 }
