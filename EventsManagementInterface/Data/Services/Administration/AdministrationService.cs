@@ -584,10 +584,10 @@ namespace EventsManagementInterface.Data.Services
 
                 logService.CreateLog(
                         LogType.SaveAttendee,
-                        "Manual Save",
+                        "ATTENDEE SAVED",
                         0,
                         attendee.GuestIdentificationNumber,
-                        "ATTENDEE SAVED"
+                        "Manual Save"
                     );
 
                 baseModal = new BaseModal
