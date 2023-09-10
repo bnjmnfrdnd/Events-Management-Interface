@@ -187,6 +187,17 @@ input[type=text], input[type=date], input[type=number] {
     font-size: 3vh;
 }
 
+.vendor-input-token-button {
+    background-color: blueviolet;
+    width: 16vh;
+    height: 10vh;
+    border-radius: 25px;
+    margin: 5px;
+    color: white;
+    border: none;
+    font-size: 2vh;
+}
+
 .vendor-input-item {
     background-color: lightgray;
     width: 10vh;

@@ -2,8 +2,8 @@
 {
     public enum OrderType
     {
-        AlcoholicDrink = 0,
-        NonAlcoholicDrink = 1,
-        Food = 2,
+        ALCOHOL = 0,
+        NON_ALCOHOL = 1,
+        FOOD = 2,
     }    
 }

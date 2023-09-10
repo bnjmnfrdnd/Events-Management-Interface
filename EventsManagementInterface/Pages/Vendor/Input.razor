@@ -6,14 +6,14 @@
 @inject VendorService vendorService
 
 <PageTitle>Vendor Input</PageTitle>
-<input type="button" value="Add Guest" class="btn btn-primary col-2" @onclick="() => ShowMenuModal()">
 <form @onsubmit="SubmitVendorInput">
     <div class="card-custom p-3">
         <div class="card-body-custom">
             <div class="row mb-3  justify-content-center mt-2">
                 <div class="form-group col-lg-2 col-md-4 col-sm-4 text-center">
-                    <label for="vendorInputGuestIndentificationNumber">Guest Identification Number</label>
-                    <input type="number" min="1000" max="9999" class="form-control text-center" id="vendorInputGuestIndentificationNumber" @bind-value="vendorInput.GuestIdentificationNumber">
+                    <h4>@vendorInput.GuestIdentificationNumber</h4>
+                    @*<label for="vendorInputGuestIndentificationNumber">GIN</label>*@
+                    @*<input type="number" min="1000" max="9999" class="form-control text-center" id="vendorInputGuestIndentificationNumber" @bind-value="vendorInput.GuestIdentificationNumber">*@
                 </div>
                 <div class="form-group col-lg-12 col-sm-12">
                     <div class="row justify-content-center mt-2">
@@ -37,43 +37,14 @@
                         <button class="vendor-input-button" type="button" style="background-color: orange !important;" @onclick="() => CheckTokenAllowance()"><span class="oi oi-magnifying-glass" aria-hidden="true"></span></button>
                     </div>
                     <div class="row justify-content-center mt-2">                        
+                        <button class="vendor-input-token-button" type="button" style="background-color: grey !important;" @onclick="() => ShowMenuModal()">Drink Menu</button>
+                        <button class="vendor-input-token-button" type="button" style="background-color: grey !important;" @onclick="() => AddFoodToken()">Food Token <br /><b>@vendorInput.FoodToken</b></button>
+                    </div>
+                    <div class="row justify-content-center mt-2">                        
                         <button class="vendor-input-submit-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
                     </div>
                 </div>
-
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="vendorInputAlcoholicDrinks">Alcoholic Drink(s)</label>
-                    <select class="form-control" id="vendorInputAlcoholicDrinks" @bind="vendorInput.AlcoholicDrinkToken">
-                        <option selected="selected">0</option>
-                        @for (int i = 1; i < 11; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                </div>
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="vendorInputNonAlcoholicDrinks">Non-Alcoholic Drink(s)</label>
-                    <select class="form-control" id="vendorInputNonAlcoholicDrinks" @bind="vendorInput.NonAlcoholicDrinkToken">
-                        <option selected="selected">0</option>
-                        @for (int i = 1; i < 11; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                </div>
-                <div class="form-group col-lg-12 col-sm-12">
-                    <label for="vendorInputFood">Food</label>
-                    <select class="form-control" id="vendorInputFood" @bind="vendorInput.FoodToken">
-                        <option selected="selected">0</option>
-                        @for (int i = 1; i < 11; i++)
-                        {
-                            <option value="@i">@i</option>
-                        }
-                    </select>
-                </div>
             </div>
-
-            <input type="submit" class="btn btn-primary" value="Submit" />
         </div>
     </div>
 </form>
@@ -128,65 +99,64 @@
                 <h5>Beers - Draught</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MADRI_LAGER_PINT, 5.00)">Madri Lager (Pint)</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.NECK_OIL_IPA_PINT, 5.00)">Neck Oil IPA (Pint)</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MADRI_LAGER_HALF_PINT, 2.50)">Madri Lager (Half-pint)</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.NECK_OIL_IPA_HALF_PINT, 2.50)">Neck Oil IPA (Half-pint)</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.MADRI_LAGER_PINT)">Madri Lager (Pint)<br /><b>@alcoholDrinkOrder[Drink.MADRI_LAGER_PINT]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.NECK_OIL_IPA_PINT)">Neck Oil IPA (Pint)<br /><b>@alcoholDrinkOrder[Drink.NECK_OIL_IPA_PINT]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.MADRI_LAGER_HALF_PINT)">Madri Lager (Half-pint)<br /><b>@alcoholDrinkOrder[Drink.MADRI_LAGER_HALF_PINT]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.NECK_OIL_IPA_HALF_PINT)">Neck Oil IPA (Half-pint)<br /><b>@alcoholDrinkOrder[Drink.NECK_OIL_IPA_HALF_PINT]</b></button>
             </div>
 
             <div class="mt-3 text-center">
                 <h5>Beers & Ciders - Bottles</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.HEINEKEN_ZERO, 3.50)">Heineken Zero</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.ASPALLS_CIDER, 5.00)">Aspalls Cider</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.KOPPARBERG_MIXED_FRUITS, 5.00)">Kopparberg - Mixed Fruits</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.HEINEKEN_ZERO)">Heineken Zero<br /><b>@nonAlcoholDrinkOrder[Drink.HEINEKEN_ZERO]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.ASPALLS_CIDER)">Aspalls Cider<br /><b>@alcoholDrinkOrder[Drink.ASPALLS_CIDER]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.KOPPARBERG_MIXED_FRUITS)">Kopparberg - Mixed Fruits<br /><b>@alcoholDrinkOrder[Drink.KOPPARBERG_MIXED_FRUITS]</b></button>
             </div>
 
             <div class="mt-3 text-center">
                 <h5>Spirits & Mixers</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.SMIRNOFF_RED_VODKA, 5.00)">Smirnoff Red Vodka</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.GORDONS_GIN, 5.00)">Gordons Gin</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.BACARDI, 5.00)">Bacardi</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.JACK_DANIELS, 5.00)">Jack Daniels</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MORGANS_SPICED_RUM, 5.00)">Morgan's Spiced Rum'</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.MALIBU, 5.00)">Malibu</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.SMIRNOFF_RED_VODKA)">Smirnoff Red Vodka<br /><b>@alcoholDrinkOrder[Drink.SMIRNOFF_RED_VODKA]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.GORDONS_GIN)">Gordons Gin<br /><b>@alcoholDrinkOrder[Drink.GORDONS_GIN]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.BACARDI)">Bacardi<br /><b>@alcoholDrinkOrder[Drink.BACARDI]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.JACK_DANIELS)">Jack Daniels<br /><b>@alcoholDrinkOrder[Drink.JACK_DANIELS]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.MORGANS_SPICED_RUM)">Morgan's Spiced Rum<br /><b>@alcoholDrinkOrder[Drink.MORGANS_SPICED_RUM]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.MALIBU)">Malibu<br /><b>@alcoholDrinkOrder[Drink.MALIBU]</b></button>
             </div>
 
             <div class="mt-3 text-center">
                 <h5>Specialist Drinks</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.GORDONS_PINK_GIN, 5.50)">Gordons Pink Gin</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WHITLEY_NEILL_SELECTION, 5.50)">Whitley Neill Selection</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.PIMMS_AND_LEMONADE, 4.50)">Pimms & Lemonade</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.GORDONS_PINK_GIN)">Gordons Pink Gin<br /><b>@alcoholDrinkOrder[Drink.GORDONS_PINK_GIN]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.WHITLEY_NEILL_SELECTION)">Whitley Neill Selection<br /><b>@alcoholDrinkOrder[Drink.WHITLEY_NEILL_SELECTION]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.PIMMS_AND_LEMONADE)">Pimms & Lemonade<br /><b>@alcoholDrinkOrder[Drink.PIMMS_AND_LEMONADE]</b></button>
             </div>
 
             <div class="mt-3 text-center">
                 <h5>Soft Drinks</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.LEMONADE, 1.00)">Lemonade</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.COKE, 1.00)">Coke</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.FRUIT_SHOOT, 1.00)">Fruit Shoot</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.ORANGE, 1.00)">Orange</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WATER, 1.00)">Water</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.LEMONADE)">Lemonade<br /><b>@nonAlcoholDrinkOrder[Drink.LEMONADE]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.COKE)">Coke<br /><b>@nonAlcoholDrinkOrder[Drink.COKE]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.FRUIT_SHOOT)">Fruit Shoot<br /><b>@nonAlcoholDrinkOrder[Drink.FRUIT_SHOOT]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.ORANGE)">Orange<br /><b>@nonAlcoholDrinkOrder[Drink.ORANGE]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddNonAlcoholDrinkToken(Drink.WATER)">Water<br /><b>@nonAlcoholDrinkOrder[Drink.WATER]</b></button>
             </div>
 
             <div class="mt-3 text-center">
                 <h5>Wines & Fizz</h5>
             </div>
             <div class="row justify-content-center mt-2">
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.PROSECCO, 4.50)">Prosecco</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.RED_WINE, 4.50)">Red Wine</button>
-                <button class="vendor-input-menu-button" type="button" @onclick="() => AddToOrder(Drink.WHITE_WINE, 4.50)">White Wine</button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.PROSECCO)">Prosecco<br /><b>@alcoholDrinkOrder[Drink.PROSECCO]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.RED_WINE)">Red Wine<br /><b>@alcoholDrinkOrder[Drink.RED_WINE]</b></button>
+                <button class="vendor-input-menu-button" type="button" @onclick="() => AddAlcoholDrinkToken(Drink.WHITE_WINE)">White Wine<br /><b>@alcoholDrinkOrder[Drink.WHITE_WINE]</b></button>
             </div>
         </ModalBody>
         <ModalFooter>
-            @*<Button Color="Color.Secondary" Clicked="@HideAttendeeModal">Close</Button>
-            <input type="button" class="btn btn-primary" value="Save" @onclick="() => SaveAttendee(attendee)">*@
+            <Button Color="Color.Secondary" Clicked="@HideMenuModal">Close</Button>
         </ModalFooter>
     </ModalContent>
 </Modal>
@@ -197,12 +167,39 @@
     private Modal menuModal;
     private BaseModal baseModal;
     private List<Order> orders = new List<Order>();
+    Dictionary<Drink, int> alcoholDrinkOrder = new Dictionary<Drink, int>();
+    Dictionary<Drink, int> nonAlcoholDrinkOrder = new Dictionary<Drink, int>();
 
     protected override async Task OnInitializedAsync()
     {
         vendorInput = new VendorInput();
         baseModal = new BaseModal();
         baseModal.Errors = new List<string>();
+
+        alcoholDrinkOrder.Add(Drink.MADRI_LAGER_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.MADRI_LAGER_HALF_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.NECK_OIL_IPA_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.NECK_OIL_IPA_HALF_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.ASPALLS_CIDER, 0);
+        alcoholDrinkOrder.Add(Drink.KOPPARBERG_MIXED_FRUITS, 0);
+        alcoholDrinkOrder.Add(Drink.SMIRNOFF_RED_VODKA, 0);
+        alcoholDrinkOrder.Add(Drink.GORDONS_GIN, 0);
+        alcoholDrinkOrder.Add(Drink.BACARDI, 0);
+        alcoholDrinkOrder.Add(Drink.JACK_DANIELS, 0);
+        alcoholDrinkOrder.Add(Drink.MORGANS_SPICED_RUM, 0);
+        alcoholDrinkOrder.Add(Drink.MALIBU, 0);
+        alcoholDrinkOrder.Add(Drink.GORDONS_PINK_GIN, 0);
+        alcoholDrinkOrder.Add(Drink.WHITLEY_NEILL_SELECTION, 0);
+        alcoholDrinkOrder.Add(Drink.PIMMS_AND_LEMONADE, 0);
+        alcoholDrinkOrder.Add(Drink.PROSECCO, 0);
+        alcoholDrinkOrder.Add(Drink.RED_WINE, 0);
+        alcoholDrinkOrder.Add(Drink.WHITE_WINE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.HEINEKEN_ZERO, 0);
+        nonAlcoholDrinkOrder.Add(Drink.LEMONADE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.COKE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.FRUIT_SHOOT, 0);        
+        nonAlcoholDrinkOrder.Add(Drink.ORANGE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.WATER, 0);
     }
 
     private Task ShowModal()
@@ -233,14 +230,54 @@
 
     public async Task SubmitVendorInput()
     {
-        baseModal = await vendorService.SubmitVendorInput(vendorInput);
+       foreach (var order in alcoholDrinkOrder)
+        {
+            if (order.Value > 0)
+            {
+                vendorInput.AlcoholicDrinkToken += order.Value;
+
+                Order odr = new Order()
+                {
+                    Name = order.Key.ToString(),
+                    Type = OrderType.ALCOHOL,
+                    Quantity = order.Value                        
+                };
+
+                orders.Add(odr);
+            }
+        }
+
+        foreach (var order in nonAlcoholDrinkOrder)
+        {
+            if (order.Value > 0)
+            {
+                vendorInput.NonAlcoholicDrinkToken += order.Value;
+
+                Order odr = new Order()
+                {
+                    Name = order.Key.ToString(),
+                    Type = OrderType.NON_ALCOHOL,
+                    Quantity = order.Value,
+                    CreatedDateTime = DateTime.Now
+                };
+
+                orders.Add(odr);
+            }
+        }
+
+        baseModal = await vendorService.SubmitVendorInput(vendorInput, orders);
 
         ShowModal();
 
         if (baseModal.Success)
         {
+            ClearOrders();
             vendorInput = new VendorInput();
+
         }
+
+        vendorInput.AlcoholicDrinkToken = 0;
+        vendorInput.NonAlcoholicDrinkToken = 0;
     }
 
     private void InsertGuestIdentificationNumber(int input) {
@@ -263,24 +300,80 @@
         }
     }
 
+    private void ClearOrders()
+    {
+        alcoholDrinkOrder = new Dictionary<Drink, int>();
+        nonAlcoholDrinkOrder = new Dictionary<Drink, int>();
+
+        alcoholDrinkOrder.Add(Drink.MADRI_LAGER_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.MADRI_LAGER_HALF_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.NECK_OIL_IPA_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.NECK_OIL_IPA_HALF_PINT, 0);
+        alcoholDrinkOrder.Add(Drink.ASPALLS_CIDER, 0);
+        alcoholDrinkOrder.Add(Drink.KOPPARBERG_MIXED_FRUITS, 0);
+        alcoholDrinkOrder.Add(Drink.SMIRNOFF_RED_VODKA, 0);
+        alcoholDrinkOrder.Add(Drink.GORDONS_GIN, 0);
+        alcoholDrinkOrder.Add(Drink.BACARDI, 0);
+        alcoholDrinkOrder.Add(Drink.JACK_DANIELS, 0);
+        alcoholDrinkOrder.Add(Drink.MORGANS_SPICED_RUM, 0);
+        alcoholDrinkOrder.Add(Drink.MALIBU, 0);
+        alcoholDrinkOrder.Add(Drink.GORDONS_PINK_GIN, 0);
+        alcoholDrinkOrder.Add(Drink.WHITLEY_NEILL_SELECTION, 0);
+        alcoholDrinkOrder.Add(Drink.PIMMS_AND_LEMONADE, 0);
+        alcoholDrinkOrder.Add(Drink.PROSECCO, 0);
+        alcoholDrinkOrder.Add(Drink.RED_WINE, 0);
+        alcoholDrinkOrder.Add(Drink.WHITE_WINE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.HEINEKEN_ZERO, 0);
+        nonAlcoholDrinkOrder.Add(Drink.LEMONADE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.COKE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.FRUIT_SHOOT, 0);
+        nonAlcoholDrinkOrder.Add(Drink.ORANGE, 0);
+        nonAlcoholDrinkOrder.Add(Drink.WATER, 0);
+    }
+
     private void ClearInput()
     {
         vendorInput.GuestIdentificationNumber = 0;
         vendorInput.AlcoholicDrinkToken = 0;
         vendorInput.NonAlcoholicDrinkToken = 0;
         vendorInput.FoodToken = 0;
+        ClearOrders();
     }
 
-    private Task AddToOrder(Drink drink, double price)
+    private void AddAlcoholDrinkToken(Drink drink)
     {
-        Order order = new Order
-            {
-                Name = drink.ToString(),
-                Price = price,
-                GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
-            };
+        if (alcoholDrinkOrder[drink] == 7)
+        {
+            alcoholDrinkOrder[drink] = 0;
+        }
+        else
+        {
+            alcoholDrinkOrder[drink] = alcoholDrinkOrder[drink] + 1;
+        }
+    }
 
-            return null;
+    private void AddNonAlcoholDrinkToken(Drink drink)
+    {
+        if (nonAlcoholDrinkOrder[drink] == 7)
+        {
+            nonAlcoholDrinkOrder[drink] = 0;
+        }
+        else
+        {
+            nonAlcoholDrinkOrder[drink] = nonAlcoholDrinkOrder[drink] + 1;
+        }
+    }
+
+    private void AddFoodToken()
+    {
+        if (vendorInput.FoodToken == 7)
+        {
+            vendorInput.FoodToken = 0;
+        }
+        else
+        {
+            vendorInput.FoodToken += 1;
+        }
     }
 }
 

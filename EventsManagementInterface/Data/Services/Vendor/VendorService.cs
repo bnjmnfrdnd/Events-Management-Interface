@@ -22,7 +22,7 @@ namespace EventsManagementInterface.Data.Services
             this.administrationService = administrationService;
         }
 
-        public async Task<BaseModal> SubmitVendorInput(VendorInput vendorInput)
+        public async Task<BaseModal> SubmitVendorInput(VendorInput vendorInput, List<Order> orders)
         {
             try
             {
@@ -75,19 +75,37 @@ namespace EventsManagementInterface.Data.Services
                 if (vendorInput.AlcoholicDrinkToken > 0 && attendee.AlcoholicDrinkTokenAllowance <= 0)
                 {
                     allowanceExceeded = true;
-                    errors.Add($"There are no alcoholic drink tokens remaining");
+                    errors.Add($"There are no alcoholic drink tokens remaining.");
+                }
+
+                if (vendorInput.AlcoholicDrinkToken > 0 && attendee.AlcoholicDrinkTokenAllowance < vendorInput.AlcoholicDrinkToken)
+                {
+                    allowanceExceeded = true;
+                    errors.Add($"There are not enough alcoholic drink tokens remaining.");
                 }
 
                 if (vendorInput.NonAlcoholicDrinkToken > 0 && attendee.NonAlcoholicDrinkTokenAllowance <= 0)
                 {
                     allowanceExceeded = true;
-                    errors.Add("There are no non-alcoholic drink tokens remaining");
+                    errors.Add("There are no non-alcoholic drink tokens remaining.");
+                }
+
+                if (vendorInput.NonAlcoholicDrinkToken > 0 && attendee.NonAlcoholicDrinkTokenAllowance < vendorInput.NonAlcoholicDrinkToken)
+                {
+                    allowanceExceeded = true;
+                    errors.Add("There are not enough non-alcoholic drink tokens remaining.");
                 }
 
                 if (vendorInput.FoodToken > 0 && attendee.FoodTokenAllowance <= 0)
                 {
                     allowanceExceeded = true;
-                    errors.Add("There are no food drink tokens remaining");
+                    errors.Add("There are no food tokens remaining.");
+                }
+
+                if (vendorInput.FoodToken > 0 && attendee.FoodTokenAllowance < vendorInput.FoodToken)
+                {
+                    allowanceExceeded = true;
+                    errors.Add("There are not enough food tokens remaining.");
                 }
 
                 if (allowanceExceeded)
@@ -134,6 +152,13 @@ namespace EventsManagementInterface.Data.Services
                 };
 
                 database.Update(attendee);
+
+                foreach (Order order in orders)
+                {
+                    order.GuestIdentificationNumber = vendorInput.GuestIdentificationNumber;
+                    database.Add(order);
+                }
+
                 database.SaveChanges();
 
                 if (vendorInput.AlcoholicDrinkToken != null && vendorInput.AlcoholicDrinkToken != 0)
