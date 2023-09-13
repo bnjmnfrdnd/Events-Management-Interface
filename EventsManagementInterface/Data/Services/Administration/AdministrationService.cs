@@ -89,7 +89,7 @@ namespace EventsManagementInterface.Data.Services
                 Utility.SendEmail(new Models.Email.Email
                 {
                     Recipient = attendee.EmailAddress,
-                    Subject = "Coloplast Fun Day Allowance",
+                    Subject = "Coloplast Family Fun Day Allowance",
                     HTMLMessage =
                     $"Hi {attendee.FirstName}, " +
                     $"<br/><br/> " +
@@ -100,7 +100,7 @@ namespace EventsManagementInterface.Data.Services
                     $"</ul>" +
                     $"<br/>" +
                     $"Kind regards, <br>" +
-                    $"Coloplast Fun Day Team"
+                    $"Coloplast Family Fun Day Team"
                 });
 
                 return baseModal;
@@ -165,7 +165,7 @@ namespace EventsManagementInterface.Data.Services
                         $"<br/><br/>" +
                         $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly." +
                         $"<br/><br/>" +
-                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
+                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Family Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
                         $"<br/><br/>" +
                         $"Kind regards," +
                         $"<br>" +
@@ -473,7 +473,7 @@ namespace EventsManagementInterface.Data.Services
                         $"<br/><br/>" +
                         $"To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly." +
                         $"<br/><br/>" +
-                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
+                        $"If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Family Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>. " +
                         $"<br/><br/>" +
                         $"Kind regards," +
                         $"<br>" +

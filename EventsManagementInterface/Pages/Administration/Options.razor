@@ -12,7 +12,8 @@
         <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
             <div class="card-custom p-3">
                 <div class="card-body-custom">
-                    <h3 class="mb-5">Check token allowance </h3>
+                        <h3 class="">Check token allowance </h3>
+                        <p class="mb-3">This will send an allowance reminder email the guest email associated with the provided GIN number.</p>
                     <div class="row mb-3 mt-3">
                         <div class="form-group">
                             <label for="guestIdentificationNumber">Guest Identification Number</label>
@@ -41,8 +42,8 @@
             <div class="card-custom p-3">
                 <div class="card-body-custom">
                     <h3>Send Invitation Email To Guests</h3>
-                    <p class="mb-5">Include previously emailed guests.</p>
-                    <div class="row mb-3 mt-3">
+                    <p class="mb-3">This will send an invitation to all guests listed on the guest management page.</p>
+                    <div class="row mb-3">
                         <div class="form-group">
                             <input type="checkbox" id="includeDuplicates" @bind-value="includePreviouslyEmailedGuests">
                             <label for="includeDuplicates"> Include guest who have already received this email</label>
