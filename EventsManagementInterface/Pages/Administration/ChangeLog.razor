@@ -1,219 +1,222 @@
-﻿@page "/administration/changelog"
+﻿<AuthorizeView>
+    @page "/administration/changelog"
 
-<PageTitle>Change Log</PageTitle>
+    <PageTitle>Change Log</PageTitle>
 
-<h1 class="mb-5">Change Log</h1>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.0</b> (01/07/2023)</h4>
-                <ul>
-                    <li>User Acceptance Testing site: <a href="https://uat-coloplastfunday.azurewebsites.net/" target="blank">https://uat-coloplastfunday.azurewebsites.net/</a></li>
-                    <li>Vendor input page: <a href="https://uat-coloplastfunday.azurewebsites.net/vendor/input" target="blank">https://uat-coloplastfunday.azurewebsites.net/vendor/input</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.1</b> (03/07/2023)</h4>
-                <ul>
-                    <li>Added vendor and change log page to the navigation menu</li>
-                    <li>Updated the colour scheme to be more user-friendly and less distracting</li>
-                    <li>
-                        Vendor input now has validation to prevent submitting data with:
-                        <ul>
-                            <li>No GIN number </li>
-                            <li>Incorrect GIN number</li>
-                            <li>No allowance token value provided</li>
-                            <li>GIN number with an exceeded allowance limit</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.2</b> (03/07/2023)</h4>
-                <ul>
-                    <li>Added guest registration page to the navigation menu</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.3</b> (04/07/2023)</h4>
-                <ul>
-                    <li>Guest Management page created</li>
+    <h1 class="mb-5">Change Log</h1>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.0</b> (01/07/2023)</h4>
                     <ul>
-                        <li>Update token allowance functionality added</li>
-                        <li>Check token allowance functionality added</li>
+                        <li>User Acceptance Testing site: <a href="https://uat-coloplastfunday.azurewebsites.net/" target="blank">https://uat-coloplastfunday.azurewebsites.net/</a></li>
+                        <li>Vendor input page: <a href="https://uat-coloplastfunday.azurewebsites.net/vendor/input" target="blank">https://uat-coloplastfunday.azurewebsites.net/vendor/input</a></li>
                     </ul>
-                </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.4</b> (05/07/2023)</h4>
-                <ul>
-                    <li>Guest Management page restructured</li>
-                    <li>
-                        Email implementation - emails are now being sent to attendees when:
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.1</b> (03/07/2023)</h4>
+                    <ul>
+                        <li>Added vendor and change log page to the navigation menu</li>
+                        <li>Updated the colour scheme to be more user-friendly and less distracting</li>
+                        <li>
+                            Vendor input now has validation to prevent submitting data with:
+                            <ul>
+                                <li>No GIN number </li>
+                                <li>Incorrect GIN number</li>
+                                <li>No allowance token value provided</li>
+                                <li>GIN number with an exceeded allowance limit</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.2</b> (03/07/2023)</h4>
+                    <ul>
+                        <li>Added guest registration page to the navigation menu</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.3</b> (04/07/2023)</h4>
+                    <ul>
+                        <li>Guest Management page created</li>
                         <ul>
-                            <li>Token allowance is checked by admin; an allowance reminder email is sent to the attendee's email address</li>
-                            <li>Token allowance is updated by admin; an allowance reminder email is sent to the attendee's email address</li>
-                            <li>The attendee registration form is completed; an email is sent to the attendee's email address</li>
+                            <li>Update token allowance functionality added</li>
+                            <li>Check token allowance functionality added</li>
                         </ul>
-                    </li>
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.5</b> (11/07/2023)</h4>
-                <ul>
-                    <li>New token allowance chart added to home page</li>
-                    <li>Began the implementation of logging</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.6</b> (19/07/2023)</h4>
-                <ul>
-                    <li>Upload Guest Data section added to guest management.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.7</b> (15/08/2023)</h4>
-                <ul>
-                    <li>Send Invitations To Guests section added to guest management.</li>
-                    <li>
-                        New email template for guests receiving their invitation email:
-                        <br /><br />
-                        <div class="card-body-custom col-6" style="background-color: lightyellow; border-radius: 25px;">
-                            Hi FirstName,
-                            <br /><br />
-                            Thank you for registering your attendance for the Coloplast Fun Day 2023:
-                            <br /><br />
-                            Please remember the following information; you'll need it for the fun day.
-                            <br /><br />
-                            You Guest Identification Number (GIN) is: <b>1234</b>
-                            <br /><br />
-                            You will have a token allowance for food and drink on the day. You're token allowance is:
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.4</b> (05/07/2023)</h4>
+                    <ul>
+                        <li>Guest Management page restructured</li>
+                        <li>
+                            Email implementation - emails are now being sent to attendees when:
                             <ul>
-                                <li>Alcoholic Drink Tokens: <b>6</b></li>
-                                <li>Non-Alcoholic Drink Tokens: <b>5</b></li>
-                                <li>Food Tokens: <b>5</b></li>
+                                <li>Token allowance is checked by admin; an allowance reminder email is sent to the attendee's email address</li>
+                                <li>Token allowance is updated by admin; an allowance reminder email is sent to the attendee's email address</li>
+                                <li>The attendee registration form is completed; an email is sent to the attendee's email address</li>
                             </ul>
-                            To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!).
-                            <br /><br />
-                            If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department.
-                            <br /><br />
-                            Kind regards,
-                            <br>
-                            Coloplast Fun Day Team
-                        </div>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.8</b> (08/09/2023)</h4>
-                <ul>
-                    <li>Fix for error on the vendor input screen.</li>
-                    <li>Vendors can now check the token allowance of GIN numbers.</li>
-                    <li>Logging has been improved.</li>
-                </ul>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.5</b> (11/07/2023)</h4>
+                    <ul>
+                        <li>New token allowance chart added to home page</li>
+                        <li>Began the implementation of logging</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.0.9</b> (09/09/2023)</h4>
-                <ul>
-                    <li>Guests can be added and updated from the guest management screen.</li>
-                    <li>
-                        Invitation email template email for guests receiving their invitation email:
-                        <br /><br />
-                        <div class="card-body-custom col-6" style="background-color: lightyellow; border-radius: 25px;">
-                            Hi First Name,
-                            <br /><br />
-                            Thank you for registering your attendance for the Coloplast Fun Day 2023.
-                            <br /><br />
-                            As per your recent email, please find below information you will need on the day, to obtain your food & drinks on the day.
-                            <br /><br />
-                            Your Guest Identification Number (GIN) is: <b>1234</b>
-                            <br /><br />
-                            Your token allowance is:
-                            <ul>
-                                <li>Alcoholic Drink Tokens: <b>4</b></li>
-                                <li>Non-Alcoholic Drink Tokens: <b>4</b></li>
-                                <li>Food Tokens: <b>4</b></li>
-                            </ul>
-                            To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly.
-                            <br /><br />
-                            If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>.
-                            <br /><br />
-                            Kind regards,
-                            <br>
-                            Coloplast Fun Day Team
-                        </div>
-                    </li>
-                </ul>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.6</b> (19/07/2023)</h4>
+                    <ul>
+                        <li>Upload Guest Data section added to guest management.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card-custom p-3 mb-3">
-    <div class="card-body-custom">
-        <div class="row">
-            <div class="form-group col-lg-12 col-sm-12">
-                <h4><b>1.1.0</b> (10/09/2023)</h4>
-                <ul>
-                    <li>Updated vendor page, menu now available and functional</li>
-                    <li>Vendor layout changed to make the vendor experience more seamless</li>
-                    <li>Orders are now being saved in the database</li>
-                </ul>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.7</b> (15/08/2023)</h4>
+                    <ul>
+                        <li>Send Invitations To Guests section added to guest management.</li>
+                        <li>
+                            New email template for guests receiving their invitation email:
+                            <br /><br />
+                            <div class="card-body-custom col-6" style="background-color: lightyellow; border-radius: 25px;">
+                                Hi FirstName,
+                                <br /><br />
+                                Thank you for registering your attendance for the Coloplast Fun Day 2023:
+                                <br /><br />
+                                Please remember the following information; you'll need it for the fun day.
+                                <br /><br />
+                                You Guest Identification Number (GIN) is: <b>1234</b>
+                                <br /><br />
+                                You will have a token allowance for food and drink on the day. You're token allowance is:
+                                <ul>
+                                    <li>Alcoholic Drink Tokens: <b>6</b></li>
+                                    <li>Non-Alcoholic Drink Tokens: <b>5</b></li>
+                                    <li>Food Tokens: <b>5</b></li>
+                                </ul>
+                                To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!).
+                                <br /><br />
+                                If there are any queries, feel free to reply to this email. Otherwise, please contact the People & Culture department.
+                                <br /><br />
+                                Kind regards,
+                                <br>
+                                Coloplast Fun Day Team
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.8</b> (08/09/2023)</h4>
+                    <ul>
+                        <li>Fix for error on the vendor input screen.</li>
+                        <li>Vendors can now check the token allowance of GIN numbers.</li>
+                        <li>Logging has been improved.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.0.9</b> (09/09/2023)</h4>
+                    <ul>
+                        <li>Guests can be added and updated from the guest management screen.</li>
+                        <li>
+                            Invitation email template email for guests receiving their invitation email:
+                            <br /><br />
+                            <div class="card-body-custom col-6" style="background-color: lightyellow; border-radius: 25px;">
+                                Hi First Name,
+                                <br /><br />
+                                Thank you for registering your attendance for the Coloplast Fun Day 2023.
+                                <br /><br />
+                                As per your recent email, please find below information you will need on the day, to obtain your food & drinks on the day.
+                                <br /><br />
+                                Your Guest Identification Number (GIN) is: <b>1234</b>
+                                <br /><br />
+                                Your token allowance is:
+                                <ul>
+                                    <li>Alcoholic Drink Tokens: <b>4</b></li>
+                                    <li>Non-Alcoholic Drink Tokens: <b>4</b></li>
+                                    <li>Food Tokens: <b>4</b></li>
+                                </ul>
+                                To use your token allowance, you will need to give your GIN number to a vendor when ordering (they will ask for it!), this will then reduce your allowance accordingly.
+                                <br /><br />
+                                If there are any queries, please email <a href='mailto:GB_people_engagement@coloplast.com?subject=Coloplast Fun Day 2023 Query'>GB_people_engagement@coloplast.com</a>.
+                                <br /><br />
+                                Kind regards,
+                                <br>
+                                Coloplast Fun Day Team
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-custom p-3 mb-3">
+        <div class="card-body-custom">
+            <div class="row">
+                <div class="form-group col-lg-12 col-sm-12">
+                    <h4><b>1.1.0</b> (10/09/2023)</h4>
+                    <ul>
+                        <li>Updated vendor page, menu now available and functional</li>
+                        <li>Vendor layout changed to make the vendor experience more seamless</li>
+                        <li>Orders are now being saved in the database</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</AuthorizeView>

@@ -1,4 +1,6 @@
-﻿@page "/administration/guestmanagement"
+﻿<AuthorizeView>
+
+@page "/administration/guestmanagement"
 @using EventsManagementInterface.Data.Models;
 @using EventsManagementInterface.Data.Models.Attendee;
 @using EventsManagementInterface.Data.Services
@@ -253,3 +255,4 @@
         ShowModal();
     }
 }
+</AuthorizeView>

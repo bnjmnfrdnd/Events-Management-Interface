@@ -1,4 +1,5 @@
-﻿@page "/administration/options"
+﻿<AuthorizeView>
+@page "/administration/options"
 @using EventsManagementInterface.Data.Models;
 @using EventsManagementInterface.Data.Models.Administration;
 @using EventsManagementInterface.Data.Services
@@ -8,59 +9,6 @@
 <h1 class="mb-5">Options</h1>
 <div class="row">
     <div class="row justify-content-between col-lg-6">
-        <form @onsubmit="UpdateTokenAllowance" class="col-12 mb-2">
-            <div class="card-custom p-3 ">
-                <div class="card-body-custom">
-                    <h3>Update token allowance </h3>
-                    <p class="mb-5">This will <b>overwrite</b> the currently used tokens with the values below</p>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <label for="guestIdentificationNumber">Guest Identification Number</label>
-                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="alcoholicDrinkTokenAllowance">Alcoholic Drink Allowance</label>
-                            <select class="form-control" id="alcoholicDrinkTokenAllowance" @bind="guestManagement.AlcoholicDrinkTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
-                                {
-                                    <option value="@i">@i</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="nonAlcoholicDrinkTokenAllowance">Non-Alcoholic Drink Allowance</label>
-                            <select class="form-control" id="nonAlcoholicDrinkTokenAllowance" @bind="guestManagement.NonAlcoholicDrinkTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
-                                {
-                                    <option value="@i">@i</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="foodTokenAllowance">Food Token Allowance</label>
-                            <select class="form-control" id="foodTokenAllowance" @bind="guestManagement.FoodTokenAllowance">
-                                <option value="" selected></option>
-                                @for (int i = 1; i < 11; i++)
-                                {
-                                    <option value="@i">@i</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <input type="submit" class="btn btn-primary" value="Submit" />
-                </div>
-            </div>
-        </form>
-
         <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
             <div class="card-custom p-3">
                 <div class="card-body-custom">
@@ -76,9 +24,6 @@
                 </div>
             </div>
         </form>
-    </div>
-
-    <div class="row justify-content-between col-lg-6">
         <div class="col-12 mb-2">
             <div class="card-custom p-3">
                 <div class="card-body-custom">
@@ -226,3 +171,5 @@
     }
 
 }
+
+</AuthorizeView>

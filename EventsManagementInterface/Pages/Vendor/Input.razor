@@ -38,7 +38,7 @@
                     </div>
                     <div class="row justify-content-center mt-2">                        
                         <button class="vendor-input-token-button" type="button" style="background-color: grey !important;" @onclick="() => ShowMenuModal()">Drink Menu</button>
-                        <button class="vendor-input-token-button" type="button" style="background-color: grey !important;" @onclick="() => AddFoodToken()">Food Token <br /><b>@vendorInput.FoodToken</b></button>
+                        <button class="vendor-input-token-button" type="button" style="background-color: grey !important;" @onclick="() => AddFoodToken(Food.FOOD_GENERIC)">Food Token <br /><b>@foodOrder[Food.FOOD_GENERIC]</b></button>
                     </div>
                     <div class="row justify-content-center mt-2">                        
                         <button class="vendor-input-submit-button" type="button" style="background-color: darkgreen !important;" @onclick="() => SubmitVendorInput()"><span class="oi oi-check" aria-hidden="true"></span></button>
@@ -169,6 +169,7 @@
     private List<Order> orders = new List<Order>();
     Dictionary<Drink, int> alcoholDrinkOrder = new Dictionary<Drink, int>();
     Dictionary<Drink, int> nonAlcoholDrinkOrder = new Dictionary<Drink, int>();
+    Dictionary<Food, int> foodOrder = new Dictionary<Food, int>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -200,6 +201,7 @@
         nonAlcoholDrinkOrder.Add(Drink.FRUIT_SHOOT, 0);        
         nonAlcoholDrinkOrder.Add(Drink.ORANGE, 0);
         nonAlcoholDrinkOrder.Add(Drink.WATER, 0);
+        foodOrder.Add(Food.FOOD_GENERIC, 0);
     }
 
     private Task ShowModal()
@@ -230,7 +232,7 @@
 
     public async Task SubmitVendorInput()
     {
-       foreach (var order in alcoholDrinkOrder)
+        foreach (var order in alcoholDrinkOrder)
         {
             if (order.Value > 0)
             {
@@ -257,6 +259,24 @@
                 {
                     Name = order.Key.ToString(),
                     Type = OrderType.NON_ALCOHOL,
+                    Quantity = order.Value,
+                    CreatedDateTime = DateTime.Now
+                };
+
+                orders.Add(odr);
+            }
+        }
+
+        foreach (var order in foodOrder)
+        {
+            if (order.Value > 0)
+            {
+                vendorInput.FoodToken += order.Value;
+
+                Order odr = new Order()
+                {
+                    Name = order.Key.ToString(),
+                    Type = OrderType.FOOD,
                     Quantity = order.Value,
                     CreatedDateTime = DateTime.Now
                 };
@@ -304,6 +324,7 @@
     {
         alcoholDrinkOrder = new Dictionary<Drink, int>();
         nonAlcoholDrinkOrder = new Dictionary<Drink, int>();
+        foodOrder = new Dictionary<Food, int>();
 
         alcoholDrinkOrder.Add(Drink.MADRI_LAGER_PINT, 0);
         alcoholDrinkOrder.Add(Drink.MADRI_LAGER_HALF_PINT, 0);
@@ -329,6 +350,7 @@
         nonAlcoholDrinkOrder.Add(Drink.FRUIT_SHOOT, 0);
         nonAlcoholDrinkOrder.Add(Drink.ORANGE, 0);
         nonAlcoholDrinkOrder.Add(Drink.WATER, 0);
+        foodOrder.Add(Food.FOOD_GENERIC, 0);
     }
 
     private void ClearInput()
@@ -342,7 +364,7 @@
 
     private void AddAlcoholDrinkToken(Drink drink)
     {
-        if (alcoholDrinkOrder[drink] == 7)
+        if (alcoholDrinkOrder[drink] == 10)
         {
             alcoholDrinkOrder[drink] = 0;
         }
@@ -354,7 +376,7 @@
 
     private void AddNonAlcoholDrinkToken(Drink drink)
     {
-        if (nonAlcoholDrinkOrder[drink] == 7)
+        if (nonAlcoholDrinkOrder[drink] == 10)
         {
             nonAlcoholDrinkOrder[drink] = 0;
         }
@@ -364,15 +386,15 @@
         }
     }
 
-    private void AddFoodToken()
+    private void AddFoodToken(Food food)
     {
-        if (vendorInput.FoodToken == 7)
+        if (foodOrder[food] == 10)
         {
-            vendorInput.FoodToken = 0;
+            foodOrder[food] = 0;
         }
         else
         {
-            vendorInput.FoodToken += 1;
+            foodOrder[food] = foodOrder[food] + 1;
         }
     }
 }
