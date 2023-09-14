@@ -57,7 +57,7 @@
     ChartColor.FromRgba(0,0,0, 1f),
     };
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnInitializedAsync()
         {
 
         attendees = await administrationService.GetAttendees();
@@ -66,8 +66,8 @@
         nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
         foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
 
-        if (firstRender)
-        {
+        //if (firstRender)
+        //{
             await allowanceDonutChart.Clear();
             await attendanceChart.Clear();
             await ordersLineChart.Clear();
@@ -75,7 +75,7 @@
             await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
             await ordersLineChart.AddLabelsDatasetsAndUpdate(ordersDateTimeLabels, GetOrdersTimeLineChartDataset());
         }
-        }
+        //}
 
         private BarChartDataset<double> GetAttendeeChartDataset()
         {
