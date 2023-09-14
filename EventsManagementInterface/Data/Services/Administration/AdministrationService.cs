@@ -197,8 +197,8 @@ namespace EventsManagementInterface.Data.Services
             }
             catch (Exception exception)
             {
-                Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
-                logService.CreateExceptionThrownLog("SendAllGuestsInvites", exception);
+                Utility.SendExceptionThrownEmail("SendInvitationEmails", exception);
+                logService.CreateExceptionThrownLog("SendInvitationEmails", exception);
 
                 BaseModal baseModal = new BaseModal
                 {
@@ -499,8 +499,8 @@ namespace EventsManagementInterface.Data.Services
             }
             catch (Exception exception)
             {
-                Utility.SendExceptionThrownEmail("SendAllGuestsInvites", exception);
-                logService.CreateExceptionThrownLog("SendAllGuestsInvites", exception);
+                Utility.SendExceptionThrownEmail("SendInvitationEmail", exception);
+                logService.CreateExceptionThrownLog("SendInvitationEmail", exception);
 
                 BaseModal baseModal = new BaseModal
                 {
