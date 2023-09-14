@@ -242,7 +242,8 @@
                 {
                     Name = order.Key.ToString(),
                     Type = OrderType.ALCOHOL,
-                    Quantity = order.Value                        
+                        Quantity = order.Value,
+                        CreatedDateTime = DateTime.Now
                 };
 
                 orders.Add(odr);
@@ -291,7 +292,8 @@
 
         if (baseModal.Success)
         {
-            ClearOrders();
+
+            ClearInput();
             vendorInput = new VendorInput();
 
         }
@@ -325,6 +327,7 @@
         alcoholDrinkOrder = new Dictionary<Drink, int>();
         nonAlcoholDrinkOrder = new Dictionary<Drink, int>();
         foodOrder = new Dictionary<Food, int>();
+        orders = new List<Order>();
 
         alcoholDrinkOrder.Add(Drink.MADRI_LAGER_PINT, 0);
         alcoholDrinkOrder.Add(Drink.MADRI_LAGER_HALF_PINT, 0);
@@ -351,6 +354,7 @@
         nonAlcoholDrinkOrder.Add(Drink.ORANGE, 0);
         nonAlcoholDrinkOrder.Add(Drink.WATER, 0);
         foodOrder.Add(Food.FOOD_GENERIC, 0);
+
     }
 
     private void ClearInput()
