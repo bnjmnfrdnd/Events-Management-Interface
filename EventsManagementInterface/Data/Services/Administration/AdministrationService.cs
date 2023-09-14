@@ -29,6 +29,11 @@ namespace EventsManagementInterface.Data.Services
             return await database.Attendee.ToListAsync();
         }
 
+        public async Task<List<Order>> GetOrders()
+        {
+            return await database.Order.ToListAsync();
+        }
+
         public async Task<BaseModal> QuickCheckTokenAllowance(int GIN)
         {
             Attendee attendee = database.Attendee.SingleOrDefault(x => x.GuestIdentificationNumber == GIN);
