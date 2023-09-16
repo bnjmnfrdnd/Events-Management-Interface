@@ -10,16 +10,12 @@
     <div class="row justify-content-around mt-2">
         <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
             <div class="card-body-custom">
-                <BarChart @ref="attendanceChart" Type="ChartType.Bar" TItem="double" />
-                <div class="row mb-3 mt-3">
-                    <div class="form-group">
-                    </div>
-                </div>
+                <BarChart @ref="moneySpentChart" Type="ChartType.Bar" TItem="double" />
             </div>
         </div>
         <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
             <div class="card-body-custom">
-                <DoughnutChart @ref="allowanceDonutChart" Type="ChartType.Bar" TItem="double" />
+                <BarChart @ref="alcoholNonAlcoholChart" Type="ChartType.Bar" TItem="double" />
             </div>
         </div>
     </div>
@@ -38,7 +34,16 @@
     <div class="row justify-content-around">
         <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
             <div class="card-body-custom">
-                <BarChart @ref="moneySpentChart" Type="ChartType.Bar" TItem="double" />
+                <BarChart @ref="allowanceUsedChart" Type="ChartType.Bar" TItem="double" />
+                <div class="row mb-3 mt-3">
+                    <div class="form-group">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
+            <div class="card-body-custom">
+                <DoughnutChart @ref="allowanceDonutChart" Type="ChartType.Bar" TItem="double" />
             </div>
         </div>
     </div>
@@ -51,15 +56,16 @@
         double foodTokenAllowance = 0;
 
         string[] allowanceLabels = { "Alcohol Drink Tokens", "Non-Alcohol Drink Tokens", "Food Tokens" };
-        string[] attendanceLabels = { "Guests", "Invites Sent" };
+        string[] alcoholNonAlcoholLabels = { "Alcohol", "Non-Alcohol" };
         List<string> drinksLabels = new List<string>();
         List<string> ordersDateTimeLabels = new List<string>();
-        BarChart<double> attendanceChart = new BarChart<double>();
+        BarChart<double> allowanceUsedChart = new BarChart<double>();
         BarChart<double> moneySpentChart = new BarChart<double>();
+        BarChart<double> alcoholNonAlcoholChart = new BarChart<double>();
         DoughnutChart<double> drinkDonutChart = new DoughnutChart<double>();
         DoughnutChart<double> allowanceDonutChart = new DoughnutChart<double>();
         LineChart<double> ordersLineChart = new LineChart<double>();
-        DateTime dateOfEvent = DateTime.ParseExact("16/09/2023 00:00", "dd/MM/yyyy HH:mm", null);
+        DateTime dateOfEvent = DateTime.ParseExact("18/09/2023 00:00", "dd/MM/yyyy HH:mm", null);
 
         List<string> chartBackgroundColors = new List<string>
         {
@@ -75,29 +81,31 @@
 
         protected override async Task OnInitializedAsync()
         {
-            attendees = await administrationService.GetAttendees();
-            orders = await administrationService.GetOrders();
-            alcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableAlcoholDrinkTokens();
-            nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
-            foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
+        attendees = await administrationService.GetAttendees();
+        orders = await administrationService.GetOrders();
+        alcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableAlcoholDrinkTokens();
+        nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
+        foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
 
-            await allowanceDonutChart.Clear();
-            await attendanceChart.Clear();
-            await ordersLineChart.Clear();
-            await drinkDonutChart.Clear();
-            await moneySpentChart.Clear();
-            await allowanceDonutChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetTokenAllowanceChartDataset());
-            await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
-            await ordersLineChart.AddLabelsDatasetsAndUpdate(ordersDateTimeLabels, GetOrdersTimeLineChartDataset());
-            await drinkDonutChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetDrinksChartDataset());
-            await moneySpentChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetMoneySpentChartDataset());
+        await allowanceDonutChart.Clear();
+        await allowanceUsedChart.Clear();
+        await ordersLineChart.Clear();
+        await drinkDonutChart.Clear();
+        await moneySpentChart.Clear();
+        await alcoholNonAlcoholChart.Clear();
+        await allowanceDonutChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetTokenAllowanceChartDataset());
+        await allowanceUsedChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetAllowanceUsedChartDataset());
+        await ordersLineChart.AddLabelsDatasetsAndUpdate(ordersDateTimeLabels, GetOrdersTimeLineChartDataset());
+        await drinkDonutChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetDrinksChartDataset());
+        await moneySpentChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetMoneySpentChartDataset());
+        await alcoholNonAlcoholChart.AddLabelsDatasetsAndUpdate(alcoholNonAlcoholLabels, GetAlcoholNonAlcoholChartDataset());
         }
 
         private BarChartDataset<double> GetMoneySpentChartDataset()
         {
         return new()
             {
-                Label = "Money Spent (via tokens)",
+                Label = "Money Spent (£)",
                 Data = MoneySpentDataset(),
                 BackgroundColor = chartBackgroundColors,
                 BorderColor = chartBorderColors,
@@ -105,12 +113,24 @@
             };
         }
 
-        private BarChartDataset<double> GetAttendeeChartDataset()
+        private BarChartDataset<double> GetAlcoholNonAlcoholChartDataset()
         {
         return new()
             {
-                Label = "Guests",
-                Data = AttendeeDataSet(),
+                Label = "Drink Type (£)",
+                Data = AlcoholNonAlcoholDataset(),
+                BackgroundColor = chartBackgroundColors,
+                BorderColor = chartBorderColors,
+                BorderWidth = 3
+            };
+        }
+
+        private BarChartDataset<double> GetAllowanceUsedChartDataset()
+        {
+        return new()
+            {
+                Label = "Allowance Used",
+                Data = AttendeeUsedDataSet(),
                 BackgroundColor = chartBackgroundColors,
                 BorderColor = chartBorderColors,
                 BorderWidth = 3
@@ -157,18 +177,18 @@
 
         public double CalculateTotalSpent(Drink drink)
         {
-            double spent = 0;
-            foreach (Order order in orders.Where(x => x.Name == drink.ToString()))
-            {
-                spent += order.Price;
-            }
+        double spent = 0;
+        foreach (Order order in orders.Where(x => x.Name == drink.ToString()))
+        {
+            spent += order.Price;
+        }
 
-            return spent;
+        return spent;
         }
 
         List<double> MoneySpentDataset()
         {
-            return new List<double>
+        return new List<double>
             {
                 CalculateTotalSpent(Drink.ASPALLS_CIDER),
                 CalculateTotalSpent(Drink.BACARDI),
@@ -196,13 +216,61 @@
                 CalculateTotalSpent(Drink.WHITLEY_NEILL_SELECTION),
             };
         }
-        
-        List<double> AttendeeDataSet()
+
+        List<double> AlcoholNonAlcoholDataset()
         {
+            double alcoholTotal = 0;
+            double nonAlcoholTotal = 0;
+
+            foreach (Order order in orders)
+            {
+                if (order.Type == OrderType.ALCOHOL)
+                {
+                    alcoholTotal += order.Price;
+                }
+
+                if (order.Type == OrderType.NON_ALCOHOL)
+                {
+                    nonAlcoholTotal += order.Price;
+                }
+            }
+
             return new List<double>
             {
-                attendees.Count(),
-                attendees.Where(x => !x.Archived && x.GuestIdentificationNumberEmailSent).Count()
+                alcoholTotal,
+                nonAlcoholTotal
+            };
+        }
+        
+        List<double> AlowanceUsedDataSet()
+        {
+            double alcoholTokensUsed = 0;
+            double nonAlcoholTokensUsed = 0;
+            double foodTokensUsed = 0;
+
+            foreach (Order order in orders)
+            {
+                if (order.Type == OrderType.ALCOHOL)
+                {
+                    alcoholTokensUsed++;
+                }
+
+                if (order.Type == OrderType.NON_ALCOHOL)
+                {
+                    nonAlcoholTokensUsed++;
+                }
+
+                if (order.Type == OrderType.FOOD)
+                {
+                    foodTokensUsed++;
+                }
+            }
+
+            return new List<double>
+            {
+                alcoholTokensUsed,
+                nonAlcoholTokensUsed,
+                foodTokensUsed
             };
         }
 

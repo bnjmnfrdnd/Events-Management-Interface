@@ -532,7 +532,7 @@ namespace EventsManagementInterface.Data.Services
             {
                 existingGINS.Add(a.GuestIdentificationNumber);
             }
-
+            
             if (existingGINS.Count != 0)
             {
                 foreach (int existingGIN in existingGINS)

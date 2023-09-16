@@ -64,15 +64,6 @@
                         <input type="button" @onclick="() => DeleteAllOrders()" class=" btn btn-primary col-2" value="Delete">
                     </div>
                 </div>
-            </div>
-
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
-                    <h3>Export all orders</h3>
-                    <div class="row mb-3">
-                        <input type="button" @onclick="() => ExportOrderRecords()" class=" btn btn-primary col-2" value="Export">
-                    </div>
-                </div>
             </div>*@
         </div>
     </div>
@@ -162,19 +153,19 @@
 
         public void DeleteAllOrders()
         {
-        administrationService.DeleteAllOrders();
+            administrationService.DeleteAllOrders();
         }
 
         public async Task CheckTokenAllowance()
         {
-        baseModal = await administrationService.CheckTokenAllowance(guestManagement);
+            baseModal = await administrationService.CheckTokenAllowance(guestManagement);
 
-        ShowModal();
+            ShowModal();
 
-        if (baseModal.Success)
-        {
-            guestManagement = new();
-        }
+            if (baseModal.Success)
+            {
+                guestManagement = new();
+            }
         }
 
         public async void UploadData(InputFileChangeEventArgs document)
