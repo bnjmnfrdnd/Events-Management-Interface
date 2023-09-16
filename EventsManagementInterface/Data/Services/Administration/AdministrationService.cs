@@ -564,9 +564,51 @@ namespace EventsManagementInterface.Data.Services
         {
             try
             {
-
                 BaseModal baseModal;
                 string message = "";
+
+                if (attendee.EmailAddress == null || attendee.EmailAddress.Length == 0)
+                {
+                    return  baseModal = new BaseModal
+                    {
+                        Success = false,
+                        Title = "Error",
+                        Message = "There has been an error saving the attendee.",
+                        Errors= new List<string>()
+                        {
+                            "Please provide an email address."
+                        }
+                    };
+                }
+
+                if (attendee.FirstName == null || attendee.FirstName.Length == 0)
+                {
+                    return  baseModal = new BaseModal
+                    {
+                        Success = false,
+                        Title = "Error",
+                        Message = "There has been an error saving the attendee.",
+                        Errors= new List<string>()
+                        {
+                            "Please provide a first name."
+                        }
+                    };
+                }
+
+                if (attendee.LastName == null || attendee.LastName.Length == 0)
+                {
+                    return  baseModal = new BaseModal
+                    {
+                        Success = false,
+                        Title = "Error",
+                        Message = "There has been an error saving the attendee.",
+                        Errors= new List<string>()
+                        {
+                            "Please provide a last name."
+                        }
+                    };
+                }
+
                 Attendee att = database.Attendee.SingleOrDefault(x => x.GuestIdentificationNumber == attendee.GuestIdentificationNumber);
 
                 if (att == null)
@@ -596,7 +638,7 @@ namespace EventsManagementInterface.Data.Services
                         "ATTENDEE SAVED",
                         0,
                         attendee.GuestIdentificationNumber,
-                        "Manual Save"
+                        "MANUAL SAVE"
                     );
 
                 baseModal = new BaseModal
@@ -623,6 +665,18 @@ namespace EventsManagementInterface.Data.Services
 
                 return baseModal;
             }
+        }
+
+        public void DeleteAllOrders()
+        {
+            //List<Order> orders = database.Order.ToList();
+
+            //foreach (Order order in orders)
+            //{
+            //    database.Remove(order);
+            //}
+
+            //database.SaveChanges();
         }
 
     }

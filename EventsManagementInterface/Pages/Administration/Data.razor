@@ -1,7 +1,10 @@
 ﻿<AuthorizeView>
     @page "/administration/data"
     @using EventsManagementInterface.Data.Models.Attendee
+    @using EventsManagementInterface.Data.Enums
+    @using EventsManagementInterface.Data.Models.Vendor
     @inject EventsManagementInterface.Data.Services.AdministrationService administrationService
+    
 
     <PageTitle>Data</PageTitle>
     <div class="row justify-content-around mt-2">
@@ -32,6 +35,13 @@
             </div>
         </div>
     </div>
+    <div class="row justify-content-around">
+        <div class="card-custom col-lg-5 col-md-12 col-sm-12 mb-2">
+            <div class="card-body-custom">
+                <BarChart @ref="moneySpentChart" Type="ChartType.Bar" TItem="double" />
+            </div>
+        </div>
+    </div>
 
     @code {
         List<Attendee> attendees = new List<Attendee>();
@@ -45,40 +55,54 @@
         List<string> drinksLabels = new List<string>();
         List<string> ordersDateTimeLabels = new List<string>();
         BarChart<double> attendanceChart = new BarChart<double>();
+        BarChart<double> moneySpentChart = new BarChart<double>();
         DoughnutChart<double> drinkDonutChart = new DoughnutChart<double>();
         DoughnutChart<double> allowanceDonutChart = new DoughnutChart<double>();
         LineChart<double> ordersLineChart = new LineChart<double>();
-        DateTime dateOfEvent = DateTime.ParseExact("15/09/2023 00:00", "dd/MM/yyyy HH:mm", null);
+        DateTime dateOfEvent = DateTime.ParseExact("16/09/2023 00:00", "dd/MM/yyyy HH:mm", null);
 
         List<string> chartBackgroundColors = new List<string>
-    {
-    ChartColor.FromRgba(140,55,62, 0.5f),
-    ChartColor.FromRgba(188,74,60, 0.5f),
-    ChartColor.FromRgba(178,34,34, 0.5f),
-    };
+        {
+            ChartColor.FromRgba(140,55,62, 0.5f),
+            ChartColor.FromRgba(188,74,60, 0.5f),
+            ChartColor.FromRgba(178,34,34, 0.5f),
+        };
 
         List<string> chartBorderColors = new List<string>
-    {
-    ChartColor.FromRgba(0,0,0, 1f),
-    };
+        {
+            ChartColor.FromRgba(0,0,0, 1f),
+        };
 
         protected override async Task OnInitializedAsync()
         {
+            attendees = await administrationService.GetAttendees();
+            orders = await administrationService.GetOrders();
+            alcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableAlcoholDrinkTokens();
+            nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
+            foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
 
-        attendees = await administrationService.GetAttendees();
-        orders = await administrationService.GetOrders();
-        alcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableAlcoholDrinkTokens();
-        nonAlcoholicDrinkTokenAllowance = await administrationService.GetTotalAvailableNonAlcoholDrinkTokens();
-        foodTokenAllowance = await administrationService.GetTotalAvailableFoodTokens();
+            await allowanceDonutChart.Clear();
+            await attendanceChart.Clear();
+            await ordersLineChart.Clear();
+            await drinkDonutChart.Clear();
+            await moneySpentChart.Clear();
+            await allowanceDonutChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetTokenAllowanceChartDataset());
+            await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
+            await ordersLineChart.AddLabelsDatasetsAndUpdate(ordersDateTimeLabels, GetOrdersTimeLineChartDataset());
+            await drinkDonutChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetDrinksChartDataset());
+            await moneySpentChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetMoneySpentChartDataset());
+        }
 
-        await allowanceDonutChart.Clear();
-        await attendanceChart.Clear();
-        await ordersLineChart.Clear();
-        await drinkDonutChart.Clear();
-        await allowanceDonutChart.AddLabelsDatasetsAndUpdate(allowanceLabels, GetTokenAllowanceChartDataset());
-        await attendanceChart.AddLabelsDatasetsAndUpdate(attendanceLabels, GetAttendeeChartDataset());
-        await ordersLineChart.AddLabelsDatasetsAndUpdate(ordersDateTimeLabels, GetOrdersTimeLineChartDataset());
-        await drinkDonutChart.AddLabelsDatasetsAndUpdate(drinksLabels, GetDrinksChartDataset());
+        private BarChartDataset<double> GetMoneySpentChartDataset()
+        {
+        return new()
+            {
+                Label = "Money Spent (via tokens)",
+                Data = MoneySpentDataset(),
+                BackgroundColor = chartBackgroundColors,
+                BorderColor = chartBorderColors,
+                BorderWidth = 3
+            };
         }
 
         private BarChartDataset<double> GetAttendeeChartDataset()
@@ -131,9 +155,51 @@
             };
         }
 
+        public double CalculateTotalSpent(Drink drink)
+        {
+            double spent = 0;
+            foreach (Order order in orders.Where(x => x.Name == drink.ToString()))
+            {
+                spent += order.Price;
+            }
+
+            return spent;
+        }
+
+        List<double> MoneySpentDataset()
+        {
+            return new List<double>
+            {
+                CalculateTotalSpent(Drink.ASPALLS_CIDER),
+                CalculateTotalSpent(Drink.BACARDI),
+                CalculateTotalSpent(Drink.COKE),
+                CalculateTotalSpent(Drink.FRUIT_SHOOT),
+                CalculateTotalSpent(Drink.GORDONS_GIN),
+                CalculateTotalSpent(Drink.GORDONS_PINK_GIN),
+                CalculateTotalSpent(Drink.HEINEKEN_ZERO),
+                CalculateTotalSpent(Drink.JACK_DANIELS),
+                CalculateTotalSpent(Drink.KOPPARBERG_MIXED_FRUITS),
+                CalculateTotalSpent(Drink.LEMONADE),
+                CalculateTotalSpent(Drink.MADRI_LAGER_HALF_PINT),
+                CalculateTotalSpent(Drink.MADRI_LAGER_PINT),
+                CalculateTotalSpent(Drink.MALIBU),
+                CalculateTotalSpent(Drink.MORGANS_SPICED_RUM),
+                CalculateTotalSpent(Drink.NECK_OIL_IPA_HALF_PINT),
+                CalculateTotalSpent(Drink.NECK_OIL_IPA_PINT),
+                CalculateTotalSpent(Drink.ORANGE),
+                CalculateTotalSpent(Drink.PIMMS_AND_LEMONADE),
+                CalculateTotalSpent(Drink.PROSECCO),
+                CalculateTotalSpent(Drink.RED_WINE),
+                CalculateTotalSpent(Drink.SMIRNOFF_RED_VODKA),
+                CalculateTotalSpent(Drink.WATER),
+                CalculateTotalSpent(Drink.WHITE_WINE),
+                CalculateTotalSpent(Drink.WHITLEY_NEILL_SELECTION),
+            };
+        }
+        
         List<double> AttendeeDataSet()
         {
-        return new List<double>
+            return new List<double>
             {
                 attendees.Count(),
                 attendees.Where(x => !x.Archived && x.GuestIdentificationNumberEmailSent).Count()
@@ -142,7 +208,7 @@
 
         List<double> TokenAllowanceDataSet()
         {
-        return new List<double>
+            return new List<double>
             {
                 administrationService.GetTotalAvailableAlcoholDrinkTokens().Result,
                 administrationService.GetTotalAvailableNonAlcoholDrinkTokens().Result,
@@ -152,33 +218,32 @@
 
         List<double> DrinksDataSet()
         {
-        System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+            System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.ASPALLS_CIDER.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.BACARDI.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.COKE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.FRUIT_SHOOT.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.GORDONS_GIN.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.GORDONS_PINK_GIN.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.HEINEKEN_ZERO.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.JACK_DANIELS.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.KOPPARBERG_MIXED_FRUITS.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.LEMONADE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MADRI_LAGER_HALF_PINT.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MADRI_LAGER_PINT.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MALIBU.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MORGANS_SPICED_RUM.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.NECK_OIL_IPA_HALF_PINT.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.NECK_OIL_IPA_PINT.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.ORANGE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.PIMMS_AND_LEMONADE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.PROSECCO.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.RED_WINE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.SMIRNOFF_RED_VODKA.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WATER.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WHITE_WINE.ToString().Replace("_", " ").ToLower()));
+            drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WHITLEY_NEILL_SELECTION.ToString().Replace("_", " ").ToLower()));
 
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.ASPALLS_CIDER.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.BACARDI.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.COKE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.FRUIT_SHOOT.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.GORDONS_GIN.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.GORDONS_PINK_GIN.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.HEINEKEN_ZERO.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.JACK_DANIELS.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.KOPPARBERG_MIXED_FRUITS.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.LEMONADE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MADRI_LAGER_HALF_PINT.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MADRI_LAGER_PINT.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MALIBU.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.MORGANS_SPICED_RUM.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.NECK_OIL_IPA_HALF_PINT.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.NECK_OIL_IPA_PINT.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.ORANGE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.PIMMS_AND_LEMONADE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.PROSECCO.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.RED_WINE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.SMIRNOFF_RED_VODKA.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WATER.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WHITE_WINE.ToString().Replace("_", " ").ToLower()));
-        drinksLabels.Add(textInfo.ToTitleCase(EventsManagementInterface.Data.Enums.Drink.WHITLEY_NEILL_SELECTION.ToString().Replace("_", " ").ToLower()));
-        
             return new List<double>
             {
                 orders.Where(x => x.Name == EventsManagementInterface.Data.Enums.Drink.ASPALLS_CIDER.ToString()).Count(),
@@ -210,21 +275,21 @@
 
         List<double> OrdersTimeLineDataSet()
         {
-            List<double> contentTimeLine = new List<double>();
+        List<double> contentTimeLine = new List<double>();
 
-            for (DateTime time = dateOfEvent.AddHours(-18); time < dateOfEvent; time = time.AddHours(1))
-            {
-                string copyTime = time.ToString("HH:mm");
-                ordersDateTimeLabels.Add(copyTime);
-            }
+        for (DateTime time = dateOfEvent.AddHours(-18); time < dateOfEvent; time = time.AddHours(1))
+        {
+            string copyTime = time.ToString("HH:mm");
+            ordersDateTimeLabels.Add(copyTime);
+        }
 
-            foreach (string time in ordersDateTimeLabels)
-            {
-                DateTime dateAdjusted = DateTime.Parse(time);
-                var order = orders.Where(x => x.CreatedDateTime.TimeOfDay.Hours == dateAdjusted.Hour && x.CreatedDateTime.Date == dateAdjusted.Date).ToList();
-                contentTimeLine.Add(order.Count);
-            }
-            return contentTimeLine;
+        foreach (string time in ordersDateTimeLabels)
+        {
+            DateTime dateAdjusted = DateTime.Parse(time);
+            var order = orders.Where(x => x.CreatedDateTime.AddHours(1).TimeOfDay.Hours == dateAdjusted.Hour && x.CreatedDateTime.Date == dateAdjusted.Date).ToList();
+            contentTimeLine.Add(order.Count);
+        }
+        return contentTimeLine;
         }
     }
 

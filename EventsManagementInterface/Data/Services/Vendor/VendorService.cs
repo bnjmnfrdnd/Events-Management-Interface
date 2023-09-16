@@ -59,9 +59,10 @@ namespace EventsManagementInterface.Data.Services
                         GuestIdentificationNumber = vendorInput.GuestIdentificationNumber,
                         GuestName = "",
                         Success = false,
-                        Errors = new List<string> {
-                        $"Guest Identificiation Number ({vendorInput.GuestIdentificationNumber}) does not exist"
-                    },
+                        Errors = new List<string> 
+                        {
+                            $"Guest Identificiation Number ({vendorInput.GuestIdentificationNumber}) does not exist"
+                        },
                         Message = "Please try again",
                         Title = "Error",
                         TokensRemaining = new List<string>()
@@ -155,6 +156,96 @@ namespace EventsManagementInterface.Data.Services
 
                 foreach (Order order in orders)
                 {
+                    switch (order.Type)
+                    {
+                        case OrderType.ALCOHOL:
+                            switch (order.Name)
+                            {
+                                case (nameof(Drink.MADRI_LAGER_PINT)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.MADRI_LAGER_HALF_PINT)):
+                                    order.Price = 2.50;
+                                    break;
+                                case (nameof(Drink.NECK_OIL_IPA_PINT)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.NECK_OIL_IPA_HALF_PINT)):
+                                    order.Price = 2.50;
+                                    break;
+                                case (nameof(Drink.ASPALLS_CIDER)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.KOPPARBERG_MIXED_FRUITS)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.SMIRNOFF_RED_VODKA)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.GORDONS_GIN)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.BACARDI)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.JACK_DANIELS)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.MORGANS_SPICED_RUM)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.MALIBU)):
+                                    order.Price = 5.00;
+                                    break;
+                                case (nameof(Drink.GORDONS_PINK_GIN)):
+                                    order.Price = 5.50;
+                                    break;
+                                case (nameof(Drink.WHITLEY_NEILL_SELECTION)):
+                                    order.Price = 5.50;
+                                    break;
+                                case (nameof(Drink.PIMMS_AND_LEMONADE)):
+                                    order.Price = 4.50;
+                                    break;
+                                case (nameof(Drink.PROSECCO)):
+                                    order.Price = 4.50;
+                                    break;
+                                case (nameof(Drink.RED_WINE)):
+                                    order.Price = 4.50;
+                                    break;
+                                case (nameof(Drink.WHITE_WINE)):
+                                    order.Price = 4.50;
+                                    break;
+                            }
+                            break;
+
+                        case OrderType.NON_ALCOHOL:
+                            {
+                                switch (order.Name)
+                                {
+                                    case (nameof(Drink.HEINEKEN_ZERO)):
+                                        order.Price = 3.50;
+                                        break;
+                                    case (nameof(Drink.LEMONADE)):
+                                        order.Price = 1.00;
+                                        break;
+                                    case (nameof(Drink.COKE)):
+                                        order.Price = 1.00;
+                                        break;
+                                    case (nameof(Drink.FRUIT_SHOOT)):
+                                        order.Price = 1.00;
+                                        break;
+                                    case (nameof(Drink.ORANGE)):
+                                        order.Price = 1.00;
+                                        break;
+                                    case (nameof(Drink.WATER)):
+                                        order.Price = 1.00;
+                                        break;
+                                }
+                                break;
+                            }
+                    }
+
+
                     order.GuestIdentificationNumber = vendorInput.GuestIdentificationNumber;
                     database.Add(order);
                 }
@@ -222,9 +313,9 @@ namespace EventsManagementInterface.Data.Services
             }
         }
 
-        public async Task<BaseModal>CheckTokenAllowance(VendorInput vendorInput)
+        public async Task<BaseModal> CheckTokenAllowance(VendorInput vendorInput)
         {
             return await administrationService.QuickCheckTokenAllowance(vendorInput.GuestIdentificationNumber);
         }
     }
-} 
+}

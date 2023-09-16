@@ -1,148 +1,172 @@
 ﻿<AuthorizeView>
-@page "/administration/options"
-@using EventsManagementInterface.Data.Models;
-@using EventsManagementInterface.Data.Models.Administration;
-@using EventsManagementInterface.Data.Services
-@inject AdministrationService administrationService
+    @page "/administration/options"
+    @using EventsManagementInterface.Data.Models;
+    @using EventsManagementInterface.Data.Models.Administration;
+    @using EventsManagementInterface.Data.Services
+    @inject ExportService exportService
+    @inject AdministrationService administrationService
 
-<PageTitle>Options</PageTitle>
-<h1 class="mb-5">Options</h1>
-<div class="row">
-    <div class="row justify-content-between col-lg-6">
-        <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
+    <PageTitle>Options</PageTitle>
+    <h1 class="mb-5">Options</h1>
+    <div class="row">
+        <div class="row justify-content-between col-lg-6">
+            <form @onsubmit="CheckTokenAllowance" class="col-12 mb-2">
+                <div class="card-custom p-3">
+                    <div class="card-body-custom">
                         <h3 class="">Check token allowance </h3>
                         <p class="mb-3">This will send an allowance reminder email the guest email associated with the provided GIN number.</p>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <label for="guestIdentificationNumber">Guest Identification Number</label>
-                            <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                        <div class="row mb-3 mt-3">
+                            <div class="form-group">
+                                <label for="guestIdentificationNumber">Guest Identification Number</label>
+                                <input type="text" class="form-control" id="guestIdentificationNumber" @bind-value="guestManagement.GuestIdentificationNumber" style="text-transform:capitalize !important;">
+                            </div>
                         </div>
-                    </div>
 
-                    <input type="submit" class="btn btn-primary" value="Submit" />
+                        <input type="submit" class="btn btn-primary" value="Submit" />
+                    </div>
                 </div>
-            </div>
-        </form>
-        <div class="col-12 mb-2">
-            <div class="card-custom p-3">
-                <div class="card-body-custom">
-                    <h3>Upload Guest Data (.csv)</h3>
-                    <a href="/help/uploadingdata" target="_blank" class="mb-5">What should my csv data look like?</a>
-                    <div class="row mb-3 mt-3">
-                        <div class="form-group">
-                            <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+            </form>
+            <div class="col-12 mb-2">
+                <div class="card-custom p-3">
+                    <div class="card-body-custom">
+                        <h3>Upload Guest Data (.csv)</h3>
+                        <a href="/help/uploadingdata" target="_blank" class="mb-5">What should my csv data look like?</a>
+                        <div class="row mb-3 mt-3">
+                            <div class="form-group">
+                                <InputFile type="file" class="form-control" id="newContentUploadInput" OnChange="@UploadData" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <form @onsubmit="SendInvitationEmails" class="col-12 mb-2">
-            <div class="card-custom p-3">
+            <form @onsubmit="SendInvitationEmails" class="col-12 mb-2">
+                <div class="card-custom p-3">
+                    <div class="card-body-custom">
+                        <h3>Send Invitation Email To Guests</h3>
+                        <p class="mb-3">This will send an invitation to all guests listed on the guest management page.</p>
+                        <div class="row mb-3">
+                            <div class="form-group">
+                                <input type="checkbox" id="includeDuplicates" @bind-value="includePreviouslyEmailedGuests">
+                                <label for="includeDuplicates"> Include guest who have already received this email</label>
+                                <br>
+                                <br>
+                                <input type="submit" class="btn btn-primary" id="guestIdentificationNumber" value="Send">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+@*            <div class="card-custom p-3 mb-2">
                 <div class="card-body-custom">
-                    <h3>Send Invitation Email To Guests</h3>
-                    <p class="mb-3">This will send an invitation to all guests listed on the guest management page.</p>
+                    <h3>Delete all orders</h3>
                     <div class="row mb-3">
-                        <div class="form-group">
-                            <input type="checkbox" id="includeDuplicates" @bind-value="includePreviouslyEmailedGuests">
-                            <label for="includeDuplicates"> Include guest who have already received this email</label>
-                            <br>
-                            <br>
-                            <input type="submit" class="btn btn-primary" id="guestIdentificationNumber" value="Send">
-                        </div>
+                        <input type="button" @onclick="() => DeleteAllOrders()" class=" btn btn-primary col-2" value="Delete">
                     </div>
                 </div>
             </div>
-        </form>
+
+            <div class="card-custom p-3">
+                <div class="card-body-custom">
+                    <h3>Export all orders</h3>
+                    <div class="row mb-3">
+                        <input type="button" @onclick="() => ExportOrderRecords()" class=" btn btn-primary col-2" value="Export">
+                    </div>
+                </div>
+            </div>*@
+        </div>
     </div>
-</div>
 
 
 
-<Modal @ref="modal">
-    <ModalContent Size="ModalSize.Large">
-        <ModalHeader>
-            <ModalTitle>@baseModal.Title</ModalTitle>
-        </ModalHeader>
-        <ModalBody>
-            <Field>
-                <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>
-            </Field>
-            <Div Class="mb-2"></Div>
-            @if (baseModal.Success)
-            {
-                @if (baseModal.TokensRemaining != null && baseModal.TokensRemaining.Count != 0)
+    <Modal @ref="modal">
+        <ModalContent Size="ModalSize.Large">
+            <ModalHeader>
+                <ModalTitle>@baseModal.Title</ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+                <Field>
+                    <FieldLabel Style="font-weight:100">@baseModal.Message</FieldLabel>
+                </Field>
+                <Div Class="mb-2"></Div>
+                @if (baseModal.Success)
+                {
+                    @if (baseModal.TokensRemaining != null && baseModal.TokensRemaining.Count != 0)
+                    {
+                        <Field>
+                            <FieldLabel>Tokens Remaining:</FieldLabel>
+                            <UnorderedList>
+                                @foreach (string tokens in baseModal.TokensRemaining)
+                                {
+                                    <UnorderedListItem>@tokens</UnorderedListItem>
+                                }
+                            </UnorderedList>
+                        </Field>
+                    }
+                }
+                else
                 {
                     <Field>
-                        <FieldLabel>Tokens Remaining:</FieldLabel>
                         <UnorderedList>
-                            @foreach (string tokens in baseModal.TokensRemaining)
+
+                            @foreach (string error in baseModal.Errors)
                             {
-                                <UnorderedListItem>@tokens</UnorderedListItem>
+                                <UnorderedListItem>@error</UnorderedListItem>
                             }
                         </UnorderedList>
                     </Field>
                 }
-            }
-            else
-            {
-                <Field>
-                    <UnorderedList>
-
-                        @foreach (string error in baseModal.Errors)
-                        {
-                            <UnorderedListItem>@error</UnorderedListItem>
-                        }
-                    </UnorderedList>
-                </Field>
-            }
-        </ModalBody>
-        <ModalFooter>
-            <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
-        </ModalFooter>
-    </ModalContent>
-</Modal>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary" Clicked="@HideModal">Close</Button>
+            </ModalFooter>
+        </ModalContent>
+    </Modal>
 
 
-@code {
-    private Modal modal;
-    private BaseModal baseModal;
-    private EventsManagementInterface.Data.Models.Administration.GuestManagement guestManagement;
-    bool includePreviouslyEmailedGuests;
+    @code {
+        private Modal modal;
+        private BaseModal baseModal;
+        private EventsManagementInterface.Data.Models.Administration.GuestManagement guestManagement;
+        bool includePreviouslyEmailedGuests;
 
-    private Task ShowModal()
-    {
+        private Task ShowModal()
+        {
         return modal.Show();
-    }
+        }
 
-    private Task HideModal()
-    {
+        private Task HideModal()
+        {
         return modal.Hide();
-    }
+        }
 
-    protected override async Task OnInitializedAsync()
-    {
+        protected override async Task OnInitializedAsync()
+        {
         guestManagement = new();
         baseModal = new BaseModal();
         baseModal.Errors = new List<string>();
         baseModal.TokensRemaining = new List<string>();
-    }
-
-    public async Task UpdateTokenAllowance()
-    {
-        baseModal = await administrationService.UpdateTokenAllowance(guestManagement);
-
-        ShowModal();
-
-        if (baseModal.Success)
-        {
-            guestManagement = new();
         }
-    }
 
-    public async Task CheckTokenAllowance()
-    {
+        public async Task UpdateTokenAllowance()
+        {
+            baseModal = await administrationService.UpdateTokenAllowance(guestManagement);
+
+            ShowModal();
+
+            if (baseModal.Success)
+            {
+                guestManagement = new();
+            }
+        }
+
+        public void DeleteAllOrders()
+        {
+        administrationService.DeleteAllOrders();
+        }
+
+        public async Task CheckTokenAllowance()
+        {
         baseModal = await administrationService.CheckTokenAllowance(guestManagement);
 
         ShowModal();
@@ -151,16 +175,16 @@
         {
             guestManagement = new();
         }
-    }
+        }
 
-    public async void UploadData(InputFileChangeEventArgs document)
-    {
+        public async void UploadData(InputFileChangeEventArgs document)
+        {
         baseModal = await administrationService.UploadAttendeeData(document);
         ShowModal();
-    }
+        }
 
-    public async Task SendInvitationEmails()
-    {
+        public async Task SendInvitationEmails()
+        {
         baseModal = await administrationService.SendInvitationEmails(includePreviouslyEmailedGuests);
 
         ShowModal();
@@ -169,8 +193,8 @@
         {
             guestManagement = new();
         }
-    }
+        }
 
-}
+    }
 
 </AuthorizeView>

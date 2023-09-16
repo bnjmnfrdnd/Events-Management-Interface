@@ -24,6 +24,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddTransient<LogService>();
 builder.Services.AddTransient<RegistrationService>();
 builder.Services.AddTransient<AdministrationService>();
+builder.Services.AddTransient<ExportService>();
 builder.Services.AddTransient<VendorService>();
 builder.Services.AddTransient<Utility>();
 builder.Services.AddServerSideBlazor();
