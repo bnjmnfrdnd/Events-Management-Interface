@@ -354,7 +354,7 @@
         foreach (string time in ordersDateTimeLabels)
         {
             DateTime dateAdjusted = DateTime.Parse(time);
-            var order = orders.Where(x => x.CreatedDateTime.TimeOfDay.Hours == dateAdjusted.Hour && x.CreatedDateTime.Date == dateAdjusted.Date).ToList();
+            var order = orders.Where(x => x.CreatedDateTime.AddHours(1).TimeOfDay.Hours == dateAdjusted.Hour && x.CreatedDateTime.Date == dateAdjusted.Date).ToList();
             contentTimeLine.Add(order.Count);
         }
         return contentTimeLine;

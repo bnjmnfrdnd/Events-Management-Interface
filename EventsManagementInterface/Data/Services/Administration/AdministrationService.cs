@@ -669,14 +669,14 @@ namespace EventsManagementInterface.Data.Services
 
         public void DeleteAllOrders()
         {
-            //List<Order> orders = database.Order.ToList();
+            List<Order> orders = database.Order.ToList();
 
-            //foreach (Order order in orders)
-            //{
-            //    database.Remove(order);
-            //}
+            foreach (Order order in orders)
+            {
+                database.Remove(order);
+            }
 
-            //database.SaveChanges();
+            database.SaveChanges();
         }
 
     }
